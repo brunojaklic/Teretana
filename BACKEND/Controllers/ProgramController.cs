@@ -30,6 +30,21 @@ namespace BACKEND.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult Post(BACKEND.Models.Program program)
+        {
+            try
+            {
+                _context.Programi.Add(program);
+                _context.SaveChanges();
+                return StatusCode(StatusCodes.Status201Created, program);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
 
 
 
