@@ -1,5 +1,7 @@
 ﻿using BACKEND.Data;
+using BACKEND.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BACKEND.Controllers
 {
@@ -38,6 +40,69 @@ namespace BACKEND.Controllers
                 _context.Programi.Add(program);
                 _context.SaveChanges();
                 return StatusCode(StatusCodes.Status201Created, program);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        [HttpPut("{sifra:int}")]
+        public IActionResult Put(int sifra, BACKEND.Models.Program program)
+        {
+
+            if(sifra < 1)
+            {
+                return BadRequest(new { poruka = "Šifra mora biti veća od 0" });
+            }
+
+            try
+            {
+                BACKEND.Models.Program p = _context.Programi.Find(sifra);
+
+                if(p == null)
+                {
+                    return NotFound();
+                }
+
+                // za sada ručno, kasnije automatika
+                p.Naziv = program.Naziv;
+                p.Cijena = program.Cijena;
+                p.Aktivan = program.Aktivan;
+
+                _context.Programi.Update(p);
+                _context.SaveChanges();
+                return Ok(p);
+
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+
+        }
+
+        [HttpDelete("{sifra:int}")]
+        public IActionResult Delete(int sifra)
+        {
+            if (sifra < 1)
+            {
+                return BadRequest(new { poruka = "Šifra mora biti veća od 0" });
+            }
+
+            try
+            {
+                BACKEND.Models.Program p = _context.Programi.Find(sifra);
+
+                if (p == null)
+                {
+                    return NotFound();
+                }
+
+                _context.Programi.Remove(p);
+                _context.SaveChanges();
+                return NoContent();
+
             }
             catch (Exception e)
             {
