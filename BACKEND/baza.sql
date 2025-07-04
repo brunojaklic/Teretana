@@ -1,10 +1,10 @@
-﻿use master;
-go
-drop database if exists teretana;
-go
-create database teretana collate Croatian_CI_AS;
-go
-use teretana;
+﻿ALTER DATABASE db_abb4f7_wp8 SET SINGLE_USER WITH
+ROLLBACK IMMEDIATE;
+GO
+ALTER DATABASE db_abb4f7_wp8 COLLATE Latin1_General_100_CI_AI_SC_UTF8;
+GO
+ALTER DATABASE db_abb4f7_wp8 SET MULTI_USER;
+GO
 
 create table programi(
 	sifra int not null primary key identity(1,1),
