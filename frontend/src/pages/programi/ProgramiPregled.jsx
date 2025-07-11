@@ -1,11 +1,9 @@
 import { Container } from "react-bootstrap";
 
-export default function Pocetna(){
+export default function ProgramiPregled(){
     return(
-        <>
         <Container className="app">
-            Dobrodošli
+            Ovdje dođe pregled programa
         </Container>
-        </>
     )
 }
