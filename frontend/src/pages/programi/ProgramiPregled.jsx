@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Container, Table } from "react-bootstrap";
 import ProgramService from "../../services/ProgramService";
+import { NumericFormat } from "react-number-format";
+import { GrStatusGood , GrStatusCritical } from "react-icons/gr";
 
 export default function ProgramiPregled() {
 
@@ -23,7 +25,7 @@ export default function ProgramiPregled() {
     }, [])
     return (
         <>
-            Pregled programa
+            Tablični pregled programa
             <Table striped bordered hover responsive>
                 <thead>
                     <tr>
@@ -33,11 +35,35 @@ export default function ProgramiPregled() {
                     </tr>
                 </thead>
                 <tbody>
-                    {programi && programi.map((program,index)=>(
+                    {programi && programi.map((program, index) => (
                         <tr key={index}>
                             <td>{program.naziv}</td>
-                            <td>{program.cijena}</td>
-                            <td>{program.aktivan}</td>
+                            <td className="desno">
+                                <NumericFormat
+                                    value={program.cijena}
+                                    displayType={'text'}
+                                    thousandSeparator='.'
+                                    decimalSeparator=','
+                                    fixedDecimalScale={true}
+                                    decimalScale={2}
+                                    suffix='€'
+                                />
+                            </td>
+                            <td>
+                                {program.aktivan ? (
+                                    <GrStatusGood 
+                                        size={30}
+                                        color="green"
+                                        title="DA"
+                                    />
+                                ) : (
+                                    <GrStatusCritical
+                                        size={30}
+                                        color="red"
+                                        title="NE"
+                                    />
+                                )}
+                            </td>
                         </tr>
                     ))}
                 </tbody>

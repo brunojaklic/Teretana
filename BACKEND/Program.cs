@@ -47,6 +47,10 @@ app.UseSwaggerUI(p =>
 
 app.MapControllers();
 
+app.UseStaticFiles(); // omogući korištenje statičnih datoteka
+app.UseDefaultFiles(); // datoteke se nalaze u wwwroot
+app.MapFallbackToFile("index.html"); // ako nečega nema, idi na index.html
+
 app.UseCors("CorsPolicy");
 
 app.Run();
