@@ -1,4 +1,4 @@
-using BACKEND.Data;
+﻿using BACKEND.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +15,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<EdunovaContext>(o =>
 {
     o.UseSqlServer(builder.Configuration.GetConnectionString("EdunovaContext"));
+});
+
+// Svi se od svuda na sve moguće načine mogu spojiti na naš API
+// Čitati https://code-maze.com/aspnetcore-webapi-best-practices/
+builder.Services.AddCors(o =>
+{
+    o.AddPolicy("CorsPolicy", p =>
+    {
+        p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+    });
 });
 
 var app = builder.Build();
@@ -36,5 +46,7 @@ app.UseSwaggerUI(p =>
 });
 
 app.MapControllers();
+
+app.UseCors("CorsPolicy");
 
 app.Run();

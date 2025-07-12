@@ -13,13 +13,14 @@ function App() {
   return (
     <Container>
       <NavbarEdunova />
+      <Container className="app">
+        <Routes>
+          <Route path={RouteNames.HOME} element={<Pocetna />} />
 
-      <Routes>
-        <Route path={RouteNames.HOME} element={<Pocetna />} />
+          <Route path={RouteNames.PROGRAM_PREGLED} element={<ProgramiPregled />} />
 
-        <Route path={RouteNames.PROGRAM_PREGLED} element={<ProgramiPregled />} />
-        
-      </Routes>
+        </Routes>
+      </Container>
       <hr />
       &copy; Bruno Jaklić
 
