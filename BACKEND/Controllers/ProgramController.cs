@@ -32,6 +32,30 @@ namespace BACKEND.Controllers
             }
         }
 
+        [HttpGet("{sifra:int}")]
+        public IActionResult Get(int sifra)
+        {
+            if (sifra <= 0)
+            {
+                return BadRequest("Šifra nije dobra");
+            }
+
+            try
+            {
+                var program = _context.Programi.Find(sifra);
+                if(program == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(program);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
         [HttpPost]
         public IActionResult Post(BACKEND.Models.Program program)
         {

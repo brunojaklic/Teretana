@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container, Table } from "react-bootstrap";
+import { Button, Container, Table } from "react-bootstrap";
 import ProgramService from "../../services/ProgramService";
 import { NumericFormat } from "react-number-format";
 import { GrStatusGood, GrStatusCritical } from "react-icons/gr";
@@ -25,6 +25,20 @@ export default function ProgramiPregled() {
     useEffect(() => {
         dohvatiPrograme()
     }, [])
+
+    function obrisi(sifra) {
+        if (!confirm('Sigurno obrisati?')) {
+            return;
+        }
+        brisanje(sifra);
+    }
+
+    async function brisanje(sifra) {
+        const odgovor = await ProgramService.obrisi(sifra);
+        dohvatiPrograme();
+    }
+
+
     return (
         <>
 
@@ -40,6 +54,7 @@ export default function ProgramiPregled() {
                         <th>Naziv</th>
                         <th>Cijena</th>
                         <th>Aktivan</th>
+                        <th>Akcija</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,6 +86,13 @@ export default function ProgramiPregled() {
                                         title="NE"
                                     />
                                 )}
+                            </td>
+                            <td>
+                                <Button variant="danger"
+                                    onClick={() => obrisi(program.sifra)}
+                                >
+                                    Obriši
+                                </Button>
                             </td>
                         </tr>
                     ))}
