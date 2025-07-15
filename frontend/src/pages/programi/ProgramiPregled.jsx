@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { Container, Table } from "react-bootstrap";
 import ProgramService from "../../services/ProgramService";
 import { NumericFormat } from "react-number-format";
-import { GrStatusGood , GrStatusCritical } from "react-icons/gr";
+import { GrStatusGood, GrStatusCritical } from "react-icons/gr";
+import { Link } from "react-router-dom";
+import { RouteNames } from "../../constants";
 
 export default function ProgramiPregled() {
 
@@ -25,7 +27,13 @@ export default function ProgramiPregled() {
     }, [])
     return (
         <>
-            Tablični pregled programa
+
+            <Link
+                className="btn btn-success"
+                to={RouteNames.PROGRAM_NOVI} >
+                Dodavanje novog programa
+            </Link>
+
             <Table striped bordered hover responsive>
                 <thead>
                     <tr>
@@ -49,9 +57,9 @@ export default function ProgramiPregled() {
                                     suffix='€'
                                 />
                             </td>
-                            <td>
+                            <td className="sredina">
                                 {program.aktivan ? (
-                                    <GrStatusGood 
+                                    <GrStatusGood
                                         size={30}
                                         color="green"
                                         title="DA"
