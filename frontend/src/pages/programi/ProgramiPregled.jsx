@@ -3,12 +3,13 @@ import { Button, Container, Table } from "react-bootstrap";
 import ProgramService from "../../services/ProgramService";
 import { NumericFormat } from "react-number-format";
 import { GrStatusGood, GrStatusCritical } from "react-icons/gr";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 
 export default function ProgramiPregled() {
 
     const [programi, setProgrami] = useState([]);
+    const navigate = useNavigate();
 
 
 
@@ -88,9 +89,15 @@ export default function ProgramiPregled() {
                                 )}
                             </td>
                             <td>
+                                <Button
+                                    onClick={() => navigate(`/programi/${program.sifra}`)}>
+                                    Promjena
+                                </Button>
+
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+
                                 <Button variant="danger"
-                                    onClick={() => obrisi(program.sifra)}
-                                >
+                                    onClick={() => obrisi(program.sifra)}>
                                     Obriši
                                 </Button>
                             </td>

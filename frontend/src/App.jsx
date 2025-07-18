@@ -7,6 +7,7 @@ import { RouteNames } from './constants'
 import Pocetna from './pages/Pocetna'
 import ProgramiPregled from './pages/programi/ProgramiPregled'
 import ProgramiDodaj from './pages/programi/ProgramiDodaj'
+import ProgramiPromjena from './pages/programi/ProgramiPromjena'
 
 function App() {
 
@@ -21,6 +22,8 @@ function App() {
           <Route path={RouteNames.PROGRAM_PREGLED} element={<ProgramiPregled />} />
 
           <Route path={RouteNames.PROGRAM_NOVI} element={<ProgramiDodaj />} />
+
+          <Route path={RouteNames.PROGRAM_PROMJENA} element={<ProgramiPromjena />} />
 
         </Routes>
       </Container>
