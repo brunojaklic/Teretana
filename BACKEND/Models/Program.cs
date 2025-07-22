@@ -8,5 +8,7 @@ namespace BACKEND.Models
         public decimal? Cijena { get; set; }
         public bool Aktivan { get; set; }
 
+        public ICollection<Grupa> Grupe { get; set; } = [];
+
     }
 }
