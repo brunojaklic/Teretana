@@ -6,17 +6,17 @@ using BACKEND.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace EdunovaAPP.Controllers
+namespace BACKEND.Controllers
 {
 
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class ProgramController(EdunovaContext context, IMapper mapper) : TeretanaController(context, mapper)
+    public class KategorijaController(EdunovaContext context, IMapper mapper) : TeretanaController(context, mapper)
     {
 
 
         [HttpGet]
-        public ActionResult<List<ProgramDTORead>> Get()
+        public ActionResult<List<KategorijaDTORead>> Get()
         {
             if (!ModelState.IsValid)
             {
@@ -24,7 +24,7 @@ namespace EdunovaAPP.Controllers
             }
             try
             {
-                return Ok(_mapper.Map<List<ProgramDTORead>>(_context.Programi));
+                return Ok(_mapper.Map<List<KategorijaDTORead>>(_context.Kategorije));
             }
             catch (Exception ex)
             {
@@ -36,16 +36,16 @@ namespace EdunovaAPP.Controllers
 
         [HttpGet]
         [Route("{sifra:int}")]
-        public ActionResult<ProgramDTOInsertUpdate> GetBySifra(int sifra)
+        public ActionResult<KategorijaDTOInsertUpdate> GetBySifra(int sifra)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(new { poruka = ModelState });
             }
-            BACKEND.Models.Program? e;
+            Kategorija? e;
             try
             {
-                e = _context.Programi.Find(sifra);
+                e = _context.Kategorije.Find(sifra);
             }
             catch (Exception ex)
             {
@@ -53,14 +53,14 @@ namespace EdunovaAPP.Controllers
             }
             if (e == null)
             {
-                return NotFound(new { poruka = "Program ne postoji u bazi" });
+                return NotFound(new { poruka = "Kategorija ne postoji u bazi" });
             }
 
-            return Ok(_mapper.Map<ProgramDTOInsertUpdate>(e));
+            return Ok(_mapper.Map<KategorijaDTOInsertUpdate>(e));
         }
 
         [HttpPost]
-        public IActionResult Post(ProgramDTOInsertUpdate dto)
+        public IActionResult Post(KategorijaDTOInsertUpdate dto)
         {
             if (!ModelState.IsValid)
             {
@@ -68,10 +68,10 @@ namespace EdunovaAPP.Controllers
             }
             try
             {
-                var e = _mapper.Map<BACKEND.Models.Program>(dto);
-                _context.Programi.Add(e);
+                var e = _mapper.Map<Kategorija>(dto);
+                _context.Kategorije.Add(e);
                 _context.SaveChanges();
-                return StatusCode(StatusCodes.Status201Created, _mapper.Map<ProgramDTORead>(e));
+                return StatusCode(StatusCodes.Status201Created, _mapper.Map<KategorijaDTORead>(e));
             }
             catch (Exception ex)
             {
@@ -85,7 +85,7 @@ namespace EdunovaAPP.Controllers
         [HttpPut]
         [Route("{sifra:int}")]
         [Produces("application/json")]
-        public IActionResult Put(int sifra, ProgramDTOInsertUpdate dto)
+        public IActionResult Put(int sifra, KategorijaDTOInsertUpdate dto)
         {
             if (!ModelState.IsValid)
             {
@@ -93,10 +93,10 @@ namespace EdunovaAPP.Controllers
             }
             try
             {
-                BACKEND.Models.Program? e;
+                Kategorija? e;
                 try
                 {
-                    e = _context.Programi.Find(sifra);
+                    e = _context.Kategorije.Find(sifra);
                 }
                 catch (Exception ex)
                 {
@@ -104,12 +104,12 @@ namespace EdunovaAPP.Controllers
                 }
                 if (e == null)
                 {
-                    return NotFound(new { poruka = "Program ne postoji u bazi" });
+                    return NotFound(new { poruka = "Kategorija ne postoji u bazi" });
                 }
 
                 e = _mapper.Map(dto, e);
 
-                _context.Programi.Update(e);
+                _context.Kategorije.Update(e);
                 _context.SaveChanges();
 
                 return Ok(new { poruka = "Uspješno promjenjeno" });
@@ -132,10 +132,10 @@ namespace EdunovaAPP.Controllers
             }
             try
             {
-                BACKEND.Models.Program? e;
+                Kategorija? e;
                 try
                 {
-                    e = _context.Programi.Find(sifra);
+                    e = _context.Kategorije.Find(sifra);
                 }
                 catch (Exception ex)
                 {
@@ -143,9 +143,9 @@ namespace EdunovaAPP.Controllers
                 }
                 if (e == null)
                 {
-                    return NotFound("Program ne postoji u bazi");
+                    return NotFound("Kategorija ne postoji u bazi");
                 }
-                _context.Programi.Remove(e);
+                _context.Kategorije.Remove(e);
                 _context.SaveChanges();
                 return Ok(new { poruka = "Uspješno obrisano" });
             }

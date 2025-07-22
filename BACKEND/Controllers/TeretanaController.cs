@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BACKEND.Controllers
 {
 
-    public abstract class EdunovaController : ControllerBase
+    public abstract class TeretanaController : ControllerBase
     {
 
         protected readonly EdunovaContext _context;
@@ -13,7 +13,7 @@ namespace BACKEND.Controllers
         protected readonly IMapper _mapper;
 
 
-        public EdunovaController(EdunovaContext context, IMapper mapper)
+        public TeretanaController(EdunovaContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
