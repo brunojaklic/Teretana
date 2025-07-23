@@ -23,7 +23,12 @@ namespace BACKEND.Controllers
             }
             try
             {
-                return Ok(_mapper.Map<List<VjezbacDTORead>>(_context.Vjezbaci));
+                var vjezbaci = _context.Vjezbaci
+                    .Include(v => v.Kategorija)
+                    .ToList();
+
+                return Ok(_mapper.Map<List<VjezbacDTORead>>(vjezbaci));
+
             }
             catch (Exception ex)
             {
@@ -44,7 +49,10 @@ namespace BACKEND.Controllers
             Vjezbac? e;
             try
             {
-                e = _context.Vjezbaci.Find(sifra);
+                e = _context.Vjezbaci
+                .Include(v => v.Kategorija)
+                .FirstOrDefault(v => v.Sifra == sifra);
+
             }
             catch (Exception ex)
             {
@@ -67,19 +75,27 @@ namespace BACKEND.Controllers
             }
             try
             {
-                var e = _mapper.Map<Vjezbac>(dto);
-                _context.Vjezbaci.Add(e);
+                var vjezbac = _mapper.Map<Vjezbac>(dto);
+
+                var kategorija = _context.Kategorije.Find(dto.KategorijaSifra);
+                if (kategorija == null)
+                {
+                    return BadRequest(new { poruka = "Ne postoji kategorija s danim ID-om." });
+                }
+
+                vjezbac.Kategorija = kategorija;
+
+                _context.Vjezbaci.Add(vjezbac);
                 _context.SaveChanges();
-                return StatusCode(StatusCodes.Status201Created, _mapper.Map<VjezbacDTORead>(e));
+
+                return StatusCode(StatusCodes.Status201Created, _mapper.Map<VjezbacDTORead>(vjezbac));
             }
             catch (Exception ex)
             {
                 return BadRequest(new { poruka = ex.Message });
             }
-
-
-
         }
+
 
         [HttpPut]
         [Route("{sifra:int}")]

@@ -4,7 +4,9 @@
         int Sifra,
         string Ime,
         string Prezime,
-        string? Email);
+        string? Email,
+        int KategorijaSifra
+        );
 
 
 }
