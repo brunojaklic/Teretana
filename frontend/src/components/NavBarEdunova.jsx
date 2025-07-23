@@ -1,35 +1,38 @@
-import Container from 'react-bootstrap/Container';
+
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useNavigate } from 'react-router-dom';
-import { RouteNames } from '../constants';
+import { PRODUKCIJA, RouteNames } from '../constants';
 
-export default function NavBarEdunova() {
+export default function NavBarEdunova(){
 
+    const navigate = useNavigate(); // U pravilu ; ne treba
 
-  const navigate = useNavigate()
+    function OpenSwaggerURL(){
+        window.open(PRODUKCIJA + "/swagger/index.html", "_blank")
+      }
 
-
-
-  return (
-    <Navbar expand="lg" className="bg-body-tertiary">
-      <Container>
-        <Navbar.Brand className='ruka' onClick = {()=>navigate(RouteNames.HOME)}>Teretana</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="#link">Početna</Nav.Link>
-            <NavDropdown title="Programi" id="basic-nav-dropdown">
-              <NavDropdown.Item 
-              onClick = {()=>navigate(RouteNames.PROGRAM_PREGLED)}>
-                Programi
-              </NavDropdown.Item>
-              
-            </NavDropdown>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
-  );
+    return(
+        <>
+            <Navbar expand="lg" className="bg-body-tertiary">
+                <Navbar.Brand className='ruka'
+                onClick={()=>navigate(RouteNames.HOME)}
+                >Teretana APP</Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="me-auto">
+                    
+                    <NavDropdown title="Sadržaj" id="basic-nav-dropdown">
+                        <NavDropdown.Item onClick={()=>navigate(RouteNames.PROGRAM_PREGLED)}>Programi</NavDropdown.Item>
+                        <NavDropdown.Item onClick={()=>navigate(RouteNames.KATEGORIJA_PREGLED)}>Kategorije</NavDropdown.Item>
+                        <NavDropdown.Item onClick={()=>navigate(RouteNames.GRUPA_PREGLED)}>Grupe</NavDropdown.Item>
+                        <NavDropdown.Item onClick={()=>navigate(RouteNames.VJEZBAC_PREGLED)}>Vježbači</NavDropdown.Item>
+                    </NavDropdown>
+                    <Nav.Link  onClick={()=>OpenSwaggerURL()}>Swagger</Nav.Link>
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
+        </>
+    )
 }

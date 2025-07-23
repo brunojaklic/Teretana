@@ -1,4 +1,4 @@
-import ProgramService from "../../services/ProgramService"
+import KategorijaService from "../../services/KategorijaService"
 import { Button, Row, Col, Form } from "react-bootstrap";
 import moment from "moment";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -6,36 +6,35 @@ import { RouteNames } from "../../constants";
 import { useEffect, useState } from "react";
 
 
-export default function ProgramiPromjena(){
+export default function KategorijePromjena(){
 
-    const [program,setProgram] = useState({})
+    const [kategorija,setKategorija] = useState({})
     const [aktivan,setaktivan] = useState(false)
     const navigate = useNavigate()
     const routeParams = useParams()
 
-    async function dohvatiProgram(){
-        const odgovor = await ProgramService.getBySifra(routeParams.sifra);
+    async function dohvatiKategoriju(){
+        const odgovor = await KategorijaService.getBySifra(routeParams.sifra);
         if(odgovor.greska){
             alert(odgovor.poruka)
             return
         }
         //debugger; // ovo radi u Chrome inspect (ali i ostali preglednici)
         let s = odgovor.poruka
-        setProgram(s)
-        setaktivan(s.aktivan)
+        setKategorija(s)
     } 
 
     useEffect(()=>{
-        dohvatiProgram();
+        dohvatiKategoriju();
      },[])
 
-     async function promjena(program) {
-        const odgovor = await ProgramService.promjena(routeParams.sifra,program)
+     async function promjena(kategorija) {
+        const odgovor = await KategorijaService.promjena(routeParams.sifra,kategorija)
         if(odgovor.greska){
             alert(odgovor.poruka)
             return;
         }
-        navigate(RouteNames.PROGRAM_PREGLED)
+        navigate(RouteNames.KATEGORIJA_PREGLED)
     }
 
     function obradiSubmit(e){ // e je event
@@ -51,35 +50,29 @@ export default function ProgramiPromjena(){
 
     return(
         <>
-        Promjena programa
+        Promjena kategorije
         <Form onSubmit={obradiSubmit}>
 
             <Form.Group controlId="naziv">
                 <Form.Label>Naziv</Form.Label>
                 <Form.Control type="text" name="naziv" required
-                defaultValue={program.naziv} />
+                defaultValue={kategorija.naziv} />
             </Form.Group>
 
             <Form.Group controlId="cijena">
                 <Form.Label>Cijena</Form.Label>
-                <Form.Control type="number" step={0.01} name="cijena" defaultValue={program.cijena}/>
-            </Form.Group>
-
-            <Form.Group controlId="aktivan">
-                <Form.Check label="Vaučer" name="aktivan" 
-                onChange={(e)=>setaktivan(e.target.checked)}
-                checked={aktivan}  />
+                <Form.Control type="number" step={0.01} name="cijena" defaultValue={kategorija.cijena}/>
             </Form.Group>
 
         <Row className="akcije">
             <Col xs={6} sm={12} md={3} lg={6} xl={6} xxl={6}>
-            <Link to={RouteNames.PROGRAM_PREGLED} 
+            <Link to={RouteNames.KATEGORIJA_PREGLED} 
             className="btn btn-danger siroko">Odustani</Link>
             </Col>
             <Col xs={6} sm={12} md={9} lg={6} xl={6} xxl={6}>
             <Button variant="success"
             type="submit"
-            className="siroko">Promjeni program</Button>
+            className="siroko">Promjeni kategoriju</Button>
             </Col>
         </Row>
         </Form>

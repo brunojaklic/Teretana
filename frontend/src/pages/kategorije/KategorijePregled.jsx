@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import ProgramService from "../../services/ProgramService"
+import KategorijaService from "../../services/KategorijaService"
 import { Button, Table } from "react-bootstrap";
 import { NumericFormat } from "react-number-format";
 import moment from "moment";
@@ -8,73 +8,67 @@ import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 
 
-export default function ProgramiPregled(){
+export default function KategorijePregled(){
 
     const navigate = useNavigate()
 
-    const[programi, setProgrami] = useState([]);
+    const[kategorije, setKategorije] = useState([]);
 
-    async function dohvatiPrograme(){
-        const odgovor = await ProgramService.get();
+    async function dohvatiKategorije(){
+        const odgovor = await KategorijaService.get();
         if(odgovor.greska){
             alert(odgovor.poruka)
             return
         }
-        setProgrami(odgovor.poruka)
+        setKategorije(odgovor.poruka)
     } 
 
     useEffect(()=>{
-       dohvatiPrograme();
+       dohvatiKategorije();
     },[])
 
-    function aktivan(v){
-        if(v==null) return 'gray'
-        if(v) return 'green'
-        return 'red'
-    }
 
     function obrisi(sifra){
         if(!confirm('Sigurno obrisati')){
             return;
         }
-        brisanjePrograma(sifra)
+        brisanjeKategorije(sifra)
     }
 
-    async function brisanjePrograma(sifra) {
+    async function brisanjeKategorije(sifra) {
         
-        const odgovor = await ProgramService.brisanje(sifra);
+        const odgovor = await KategorijaService.brisanje(sifra);
         if(odgovor.greska){
             alert(odgovor.poruka)
             return
         }
-        dohvatiPrograme();
+        dohvatiKategorije();
     }
 
 
     return(
         <>
-        <Link to={RouteNames.PROGRAM_NOVI}
-        className="btn btn-success siroko">Dodaj novi program</Link>
+        <Link to={RouteNames.KATEGORIJA_NOVA}
+        className="btn btn-success siroko">Dodaj novu kategoriju</Link>
         <Table striped bordered hover responsive>
             <thead>
                 <tr>
                     <th>Naziv</th>
                     <th>Cijena</th>
-                    <th>Aktivan</th>
                     <th>Akcija</th>
                 </tr>
             </thead>
             <tbody>
-                {programi && programi.map((program,index)=>(
+                {kategorije && kategorije.map((kategorija,index)=>(
                     <tr key={index}>
                         <td>
-                            {program.naziv}
+                            {kategorija.naziv}
                         </td>
-                        <td className={program.cijena==null ? 'sredina' : 'desno'}>
+                        <td className={kategorija.cijena==null ? 'sredina' : 'desno'}>
 
-                             {program.cijena==null ? 'Nije definirano' : 
+                             {kategorija.cijena==null ? 'Nije definirano' : 
                              <NumericFormat 
-                             value={program.cijena}
+                             value={kategorija.cijena}
                              displayType={'text'}
                              thousandSeparator='.'
                              decimalSeparator=','
@@ -85,23 +79,16 @@ export default function ProgramiPregled(){
                              
                              }
                         </td>
-                        <td className="sredina">
-                            <GrValidate 
-                            size={30}
-                            color={aktivan(program.aktivan)}
-                            />
-                            
-                        </td>
                         <td>
                             <Button
                             variant="danger"
-                            onClick={()=>obrisi(program.sifra)}
+                            onClick={()=>obrisi(kategorija.sifra)}
                             >
                                 Obriši
                             </Button>
                             &nbsp;&nbsp;&nbsp;
                             <Button
-                            onClick={()=>navigate(`/programi/${program.sifra}`)}
+                            onClick={()=>navigate(`/kategorije/${kategorija.sifra}`)}
                             >
                                 Promjena
                             </Button>

@@ -1,20 +1,20 @@
-import ProgramService from "../../services/ProgramService"
+import KategorijaService from "../../services/KategorijaService"
 import { Button, Row, Col, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 
 
-export default function ProgramiDodaj(){
+export default function KategorijeDodaj(){
 
     const navigate = useNavigate()
 
-    async function dodaj(program) {
-        const odgovor = await ProgramService.dodaj(program)
+    async function dodaj(kategorija) {
+        const odgovor = await KategorijaService.dodaj(kategorija)
         if(odgovor.greska){
             alert(odgovor.poruka)
             return;
         }
-        navigate(RouteNames.PROGRAM_PREGLED)
+        navigate(RouteNames.KATEGORIJA_PREGLED)
     }
 
     function obradiSubmit(e){
@@ -23,13 +23,12 @@ export default function ProgramiDodaj(){
         dodaj({
             naziv: podaci.get('naziv'),
             cijena: parseFloat(podaci.get('cijena')),
-            aktivan: podaci.get('aktivan')=='on' ? true : false 
         })
     }
 
     return(
         <>
-        Dodavanje programa
+        Dodavanje kategorije
         <Form onSubmit={obradiSubmit}>
 
             <Form.Group controlId="naziv">
@@ -42,19 +41,15 @@ export default function ProgramiDodaj(){
                 <Form.Control type="number" step={0.01} name="cijena"  />
             </Form.Group>
 
-            <Form.Group controlId="aktivan">
-                <Form.Check label="Aktivan" name="aktivan" />
-            </Form.Group>
-
         <Row className="akcije">
             <Col xs={6} sm={12} md={3} lg={6} xl={6} xxl={6}>
-            <Link to={RouteNames.PROGRAM_PREGLED} 
+            <Link to={RouteNames.KATEGORIJA_PREGLED} 
             className="btn btn-danger siroko">Odustani</Link>
             </Col>
             <Col xs={6} sm={12} md={9} lg={6} xl={6} xxl={6}>
             <Button variant="success"
             type="submit"
-            className="siroko">Dodaj program</Button>
+            className="siroko">Dodaj kategoriju</Button>
             </Col>
         </Row>
         </Form>

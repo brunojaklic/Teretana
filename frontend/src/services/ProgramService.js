@@ -1,51 +1,84 @@
-import { HttpService } from "./HttpService"
+import { HttpService } from "./HttpService";
 
 
-async function get() {
+
+async function get(){
     return await HttpService.get('/Program')
-        // sve je u redu, dobili smo odgovor
-        .then((odgovor) => {
-            //console.log(odgovor.data)
-            return odgovor.data
-        })
-        // nastala je greška, obradi ju
-        .catch((e) => { })
-}
-
-async function getBySifra(sifra) {
-    return await HttpService.get('/Program/' + sifra)
-    // sve je u redu, dobili smo odgovor
     .then((odgovor)=>{
         //console.log(odgovor.data)
-        return odgovor.data
+        //console.table(odgovor.data)
+        return {greska: false, poruka: odgovor.data}
     })
-    // nastala je greška, obradi ju
-    .catch((e)=>{})
+    .catch((e)=>{
+        //console.log(e)
+        return {greska: true, poruka: 'Problem kod dohvaćanja programa'}   
+    })
 }
 
-
-async function dodaj(program) {
-    return await HttpService.post('/Program', program)
-        .then((odgovor) => { return true })
-        .catch((e) => { return false })
-}
-
-async function obrisi(sifra) {
+async function brisanje(sifra){
     return await HttpService.delete('/Program/' + sifra)
-        .then((odgovor) => { return true })
-        .catch((e) => { return false })
+    .then(()=>{
+        return {greska: false, poruka: 'Obrisano'}
+    })
+    .catch(()=>{
+        return {greska: true, poruka: 'Problem kod brisanja programa'}   
+    })
 }
 
-async function promjeni(sifra, program) {
-    return await HttpService.put('/Program/' + sifra, program)
-        .then((odgovor) => { return true })
-        .catch((e) => { return false })
+async function dodaj(program){
+    return await HttpService.post('/Program',program)
+    .then((odgovor)=>{
+        return {greska: false, poruka: odgovor.data}
+    })
+    .catch((e)=>{
+        switch (e.status) {
+            case 400:
+                let poruke='';
+                for(const kljuc in e.response.data.errors){
+                    poruke += kljuc + ': ' + e.response.data.errors[kljuc][0] + '\n';
+                }
+                return {greska: true, poruka: poruke}
+            default:
+                return {greska: true, poruka: 'Program se ne može dodati!'}
+        }
+    })
 }
+
+async function promjena(sifra,program){
+    return await HttpService.put('/Program/' + sifra,program)
+    .then((odgovor)=>{
+        return {greska: false, poruka: odgovor.data}
+    })
+    .catch((e)=>{
+        switch (e.status) {
+            case 400:
+                let poruke='';
+                for(const kljuc in e.response.data.errors){
+                    poruke += kljuc + ': ' + e.response.data.errors[kljuc][0] + '\n';
+                }
+                console.log(poruke)
+                return {greska: true, poruka: poruke}
+            default:
+                return {greska: true, poruka: 'Program se ne može promjeniti!'}
+        }
+    })
+}
+
+async function getBySifra(sifra){
+    return await HttpService.get('/Program/'+sifra)
+    .then((odgovor)=>{
+        return {greska: false, poruka: odgovor.data}
+    })
+    .catch((e)=>{
+        return {greska: true, poruka: 'Problem kod dohvaćanja programa s šifrom '+sifra}   
+    })
+}
+
 
 export default {
     get,
-    getBySifra,
+    brisanje,
     dodaj,
-    obrisi,
-    promjeni
+    getBySifra,
+    promjena
 }
