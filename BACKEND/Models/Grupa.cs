@@ -8,7 +8,7 @@ namespace BACKEND.Models
         public string Naziv { get; set; } = "";
 
         [ForeignKey("program")]
-        public required Program Program { get; set; }
+        public required TreningProgram Program { get; set; }
         public string Trener { get; set; } = "";
         public ICollection<Vjezbac>? Vjezbaci { get; set; } = [];
 

@@ -11,7 +11,7 @@ namespace BACKEND.Data
         }
 
 
-        public DbSet<BACKEND.Models.Program> Programi { get; set; }
+        public DbSet<BACKEND.Models.TreningProgram> Programi { get; set; }
 
         public DbSet<Vjezbac> Vjezbaci { get; set; }
 

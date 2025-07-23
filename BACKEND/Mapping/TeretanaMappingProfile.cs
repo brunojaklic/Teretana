@@ -8,9 +8,9 @@ namespace BACKEND.Mapping
     {
         public TeretanaMappingProfile()
         {
-            CreateMap<Program, ProgramDTORead>();
-            CreateMap<ProgramDTOInsertUpdate, Program>();
-            CreateMap<Program, ProgramDTOInsertUpdate>();
+            CreateMap<TreningProgram, ProgramDTORead>();
+            CreateMap<ProgramDTOInsertUpdate, TreningProgram>();
+            CreateMap<TreningProgram, ProgramDTOInsertUpdate>();
 
             CreateMap<Grupa, GrupaDTORead>()
                 .ForCtorParam("ProgramNaziv", opt => opt.MapFrom(src => src.Program.Naziv));

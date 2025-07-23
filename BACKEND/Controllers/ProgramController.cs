@@ -42,7 +42,7 @@ namespace EdunovaAPP.Controllers
             {
                 return BadRequest(new { poruka = ModelState });
             }
-            BACKEND.Models.Program? e;
+            BACKEND.Models.TreningProgram? e;
             try
             {
                 e = _context.Programi.Find(sifra);
@@ -68,7 +68,7 @@ namespace EdunovaAPP.Controllers
             }
             try
             {
-                var e = _mapper.Map<BACKEND.Models.Program>(dto);
+                var e = _mapper.Map<BACKEND.Models.TreningProgram>(dto);
                 _context.Programi.Add(e);
                 _context.SaveChanges();
                 return StatusCode(StatusCodes.Status201Created, _mapper.Map<ProgramDTORead>(e));
@@ -93,7 +93,7 @@ namespace EdunovaAPP.Controllers
             }
             try
             {
-                BACKEND.Models.Program? e;
+                BACKEND.Models.TreningProgram? e;
                 try
                 {
                     e = _context.Programi.Find(sifra);
@@ -132,7 +132,7 @@ namespace EdunovaAPP.Controllers
             }
             try
             {
-                BACKEND.Models.Program? e;
+                BACKEND.Models.TreningProgram? e;
                 try
                 {
                     e = _context.Programi.Find(sifra);

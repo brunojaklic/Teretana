@@ -66,7 +66,7 @@ namespace BACKEND.Controllers
                 return BadRequest(new { poruka = ModelState });
             }
 
-            Models.Program? es;
+            Models.TreningProgram? es;
             try
             {
                 es = _context.Programi.Find(dto.ProgramSifra);
@@ -122,7 +122,7 @@ namespace BACKEND.Controllers
                     return NotFound(new { poruka = "Grupa ne postoji u bazi" });
                 }
 
-                Models.Program? es;
+                Models.TreningProgram? es;
                 try
                 {
                     es = _context.Programi.Find(dto.ProgramSifra);
