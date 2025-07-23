@@ -186,8 +186,8 @@ namespace BACKEND.Controllers
 
 
         [HttpGet]
-        [Route("Polaznici/{sifraGrupe:int}")]
-        public ActionResult<List<VjezbacDTORead>> GetPolaznici(int sifraGrupe)
+        [Route("Vjezbaci/{sifraGrupe:int}")]
+        public ActionResult<List<VjezbacDTORead>> GetVjezbaci(int sifraGrupe)
         {
             if (!ModelState.IsValid || sifraGrupe <= 0)
             {
