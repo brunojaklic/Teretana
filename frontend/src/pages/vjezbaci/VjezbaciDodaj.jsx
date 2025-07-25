@@ -1,42 +1,61 @@
-import { Button, Col, Form, Row } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
-import { RouteNames } from "../../constants";
-import VjezbacService from "../../services/VjezbacService";
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import Service from '../../services/VjezbacService';
+import KategorijaService from '../../services/KategorijaService';
+import { RouteNames } from '../../constants';
 
 
-
-export default function VjezbaciDodaj(){
-
+export default function KategorijeDodaj() {
     const navigate = useNavigate();
 
-    async function dodaj(e){
-        const odgovor = await VjezbacService.dodaj(e);
-        if(odgovor.greska){
+    const [kategorije, setKategorije] = useState([]);
+    const [kategorijaSifra, setKategorijaSifra] = useState(0);
+
+    async function dohvatiKategorije() {
+        const odgovor = await KategorijaService.get();
+        setKategorije(odgovor.poruka);
+        setKategorijaSifra(odgovor.poruka[0].sifra);
+    }
+
+
+
+    useEffect(() => {
+        dohvatiKategorije();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    async function dodaj(e) {
+        const odgovor = await Service.dodaj(e);
+        if (odgovor.greska) {
             alert(odgovor.poruka);
             return;
         }
         navigate(RouteNames.VJEZBAC_PREGLED);
     }
 
-    function obradiSubmit(e){ 
+    function obradiSubmit(e) {
         e.preventDefault();
 
         const podaci = new FormData(e.target);
 
+
         dodaj({
             ime: podaci.get('ime'),
             prezime: podaci.get('prezime'),
-            email: podaci.get('email'),
-            kategorijaSifra: parseInt(kategorijaSifra)
+            kategorijaSifra: parseInt(kategorijaSifra),
+            email: podaci.get('email')
         });
-
     }
 
-    return(
+    return (
         <>
             Dodavanje novog vježbača
-            
+
+
+
             <Form onSubmit={obradiSubmit}>
+
                 <Form.Group controlId="ime">
                     <Form.Label>Ime</Form.Label>
                     <Form.Control type="text" name="ime" required />
@@ -47,42 +66,39 @@ export default function VjezbaciDodaj(){
                     <Form.Control type="text" name="prezime" required />
                 </Form.Group>
 
-                <Form.Group controlId="email">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control type="text" name="email" required />
-                </Form.Group>
-                
                 <Form.Group className='mb-3' controlId='kategorija'>
                     <Form.Label>Kategorija</Form.Label>
                     <Form.Select
                         onChange={(e) => { setKategorijaSifra(e.target.value) }}
                     >
-                        {kategorije && kategorije.map((s, index) => (
-                            <option key={index} value={s.sifra}>
-                                {s.naziv}
+                        {kategorije && kategorije.map((k, index) => (
+                            <option key={index} value={k.sifra}>
+                                {k.naziv}
                             </option>
                         ))}
                     </Form.Select>
                 </Form.Group>
 
-             
-
+                <Form.Group controlId="email">
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control type="text" name="email" required />
+                </Form.Group>
 
                 <hr />
                 <Row>
                     <Col xs={6} sm={6} md={3} lg={6} xl={6} xxl={6}>
-                    <Link to={RouteNames.VJEZBAC_PREGLED}
-                    className="btn btn-danger siroko">
-                    Odustani
-                    </Link>
+                        <Link to={RouteNames.VJEZBAC_PREGLED}
+                            className="btn btn-danger siroko">
+                            Odustani
+                        </Link>
                     </Col>
                     <Col xs={6} sm={6} md={9} lg={6} xl={6} xxl={6}>
-                    <Button variant="primary" type="submit" className="siroko">
-                        Dodaj novog vježbača
-                    </Button>
+                        <Button variant="primary" type="submit" className="siroko">
+                            Dodaj novog vježbača
+                        </Button>
                     </Col>
                 </Row>
             </Form>
         </>
-    )
+    );
 }

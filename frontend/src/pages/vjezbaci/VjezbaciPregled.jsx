@@ -1,43 +1,28 @@
-import { Button, Table } from "react-bootstrap";
-import VjezbacService from "../../services/VjezbacService";
 import { useEffect, useState } from "react";
+import { Button, Container, Table } from "react-bootstrap";
+import { IoIosAdd } from "react-icons/io";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import Service from "../../services/VjezbacService"; // primjetite promjenu naziva
 import { RouteNames } from "../../constants";
-import { Link, useNavigate } from "react-router-dom";
-
-
 
 export default function VjezbaciPregled(){
+    const [vjezbaci,setVjezbaci] = useState();
+    let navigate = useNavigate(); 
 
-    const[vjezbaci,setVjezbaci] = useState();
-
-    const navigate = useNavigate();
-
-    async function dohvatiVjezbace() {
-
-        // zaustavi kod u Chrome consoli i tamo se može raditi debug
-        //debugger;
-        
-        await VjezbacService.get()
+    async function dohvatiVjezbace(){
+        await Service.get()
         .then((odgovor)=>{
             //console.log(odgovor);
             setVjezbaci(odgovor);
         })
         .catch((e)=>{console.log(e)});
-
     }
 
-    // npm run lint
-    // javlja upozorenje
-    // 28:7  warning  React Hook useEffect has a missing dependency: 'dohvatie'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
-
-    useEffect(()=>{
-        dohvatiVjezbace();
-    },[]);
-
-   
-
-    async function obrisiAsync(sifra) {
-        const odgovor = await VjezbacService.obrisi(sifra);
+    async function obrisiVjezbaca(sifra) {
+        const odgovor = await Service.obrisi(sifra);
         //console.log(odgovor);
         if(odgovor.greska){
             alert(odgovor.poruka);
@@ -46,50 +31,63 @@ export default function VjezbaciPregled(){
         dohvatiVjezbace();
     }
 
-    function obrisi(sifra){
-        obrisiAsync(sifra);
-    }
+    useEffect(()=>{
+        dohvatiVjezbace();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[]);
 
 
-    return(
-        <>
-            <Link to={RouteNames.VJEZBAC_NOVI}>Dodaj novog vježbača</Link>
+    return (
+
+        <Container>
+            <Link to={RouteNames.VJEZBAC_NOVI} className="btn btn-success siroko">
+                <IoIosAdd
+                size={25}
+                /> Dodaj
+            </Link>
             <Table striped bordered hover responsive>
                 <thead>
                     <tr>
                         <th>Ime</th>
                         <th>Prezime</th>
+                        <th>Kategorija</th>
                         <th>Email</th>
-                        <th>Akcija</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {vjezbaci && vjezbaci.map((e,index)=>(
+                    {vjezbaci && vjezbaci.map((entitet,index)=>(
                         <tr key={index}>
-                            <td>{e.ime}</td>
-                            <td>{e.prezime}</td>
-                            <td>{e.email}</td>
-                           
-                            <td>
-                            <Button
-                                variant="primary"
-                                onClick={()=>navigate(`/vjezbaci/${e.sifra}`)}>
-                                    Promjeni
-                                </Button>
-                                &nbsp;&nbsp;&nbsp;
-                                <Button
-                                variant="danger"
-                                onClick={()=>obrisi(e.sifra)}>
-                                    Obriši
-                                </Button>
-
+                            <td>{entitet.ime}</td>
+                            <td>{entitet.prezime}</td>
+                            <td>{entitet.kategorijaSifra}</td>
+                            <td>{entitet.email}</td>
+                            <td className="sredina">
+                                    <Button
+                                        variant='primary'
+                                        onClick={()=>{navigate(`/vjezbaci/${entitet.sifra}`)}}
+                                    >
+                                        <FaEdit 
+                                    size={25}
+                                    />
+                                    </Button>
                                
+                                
+                                    &nbsp;&nbsp;&nbsp;
+                                    <Button
+                                        variant='danger'
+                                        onClick={() => obrisiVjezbaca(entitet.sifra)}
+                                    >
+                                        <FaTrash
+                                        size={25}/>
+                                    </Button>
+
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </Table>
-        </>
-    )
+        </Container>
+
+    );
 
 }
