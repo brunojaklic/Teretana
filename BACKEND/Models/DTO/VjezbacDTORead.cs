@@ -5,7 +5,7 @@
         string Ime,
         string Prezime,
         string? Email,
-        int KategorijaSifra
+        string KategorijaNaziv
         );
 
 

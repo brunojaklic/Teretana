@@ -23,7 +23,7 @@ namespace BACKEND.Mapping
             CreateMap<Kategorija, KategorijaDTOInsertUpdate>();
 
             CreateMap<Vjezbac, VjezbacDTORead>()
-                .ForMember(dest => dest.KategorijaSifra, opt => opt.MapFrom(src => src.Kategorija.Sifra));
+                .ForMember(dest => dest.KategorijaNaziv, opt => opt.MapFrom(src => src.Kategorija.Naziv));
             CreateMap<VjezbacDTOInsertUpdate, Vjezbac>()
                 .ForMember(dest => dest.Kategorija, opt => opt.Ignore());
             CreateMap<Vjezbac, VjezbacDTOInsertUpdate>();

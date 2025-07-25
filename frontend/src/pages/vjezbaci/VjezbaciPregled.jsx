@@ -59,7 +59,7 @@ export default function VjezbaciPregled(){
                         <tr key={index}>
                             <td>{entitet.ime}</td>
                             <td>{entitet.prezime}</td>
-                            <td>{entitet.kategorijaSifra}</td>
+                            <td>{entitet.kategorijaNaziv}</td>
                             <td>{entitet.email}</td>
                             <td className="sredina">
                                     <Button

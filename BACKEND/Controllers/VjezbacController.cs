@@ -27,6 +27,7 @@ namespace BACKEND.Controllers
                     .Include(v => v.Kategorija)
                     .ToList();
 
+
                 return Ok(_mapper.Map<List<VjezbacDTORead>>(vjezbaci));
 
             }
