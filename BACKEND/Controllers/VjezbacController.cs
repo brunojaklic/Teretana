@@ -171,6 +171,32 @@ namespace BACKEND.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("trazi/{uvjet}")]
+        public ActionResult<List<VjezbacDTORead>> TraziVjezbac(string uvjet)
+        {
+            if (uvjet == null || uvjet.Length < 3)
+            {
+                return BadRequest(ModelState);
+            }
+            uvjet = uvjet.ToLower();
+            try
+            {
+                IEnumerable<Vjezbac> query = _context.Vjezbaci;
+                var niz = uvjet.Split(" ");
+                foreach (var s in uvjet.Split(" "))
+                {
+                    query = query.Where(p => p.Ime.ToLower().Contains(s) || p.Prezime.ToLower().Contains(s));
+                }
+                var vjezbaci = query.ToList();
+                return Ok(_mapper.Map<List<VjezbacDTORead>>(vjezbaci));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new { poruka = e.Message });
+            }
+        }
+
 
 
     }
