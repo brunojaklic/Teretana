@@ -4,7 +4,6 @@ import { HttpService } from "./HttpService"
 async function get(){
     return await HttpService.get('/Vjezbac')
     .then((odgovor)=>{
-        //console.table(odgovor.data);
         return odgovor.data;
     })
     .catch((e)=>{console.error(e)})
@@ -23,7 +22,6 @@ async function getBySifra(sifra){
 async function obrisi(sifra) {
     return await HttpService.delete('/Vjezbac/' + sifra)
     .then((odgovor)=>{
-        //console.log(odgovor);
         return {greska: false, poruka: odgovor.data}
     })
     .catch(()=>{
@@ -69,10 +67,21 @@ async function promjena(sifra,Vjezbac) {
     })
 }
 
+async function traziVjezbac(uvjet){
+    return await HttpService.get('/Vjezbac/trazi/'+uvjet)
+    .then((odgovor)=>{
+        return {greska: false, poruka: odgovor.data}
+    })
+    .catch((e)=>{return {greska: true, poruka: 'Problem kod traženja vježbača'}})
+}
+
+
+
 export default{
     get,
     getBySifra,
     obrisi,
     dodaj,
-    promjena
+    promjena,
+    traziVjezbac
 }

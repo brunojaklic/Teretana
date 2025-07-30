@@ -40,7 +40,6 @@ export default function VjezbaciPromjena() {
 
     useEffect(() => {
         dohvatiInicijalnePodatke();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     async function promjena(e) {

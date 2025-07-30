@@ -5,7 +5,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-import Service from "../../services/VjezbacService"; // primjetite promjenu naziva
+import Service from "../../services/VjezbacService";
 import { RouteNames } from "../../constants";
 
 export default function VjezbaciPregled(){
@@ -15,7 +15,6 @@ export default function VjezbaciPregled(){
     async function dohvatiVjezbace(){
         await Service.get()
         .then((odgovor)=>{
-            //console.log(odgovor);
             setVjezbaci(odgovor);
         })
         .catch((e)=>{console.log(e)});
@@ -33,7 +32,6 @@ export default function VjezbaciPregled(){
 
     useEffect(()=>{
         dohvatiVjezbace();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
 
 

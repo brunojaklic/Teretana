@@ -19,7 +19,6 @@ export default function KategorijePromjena(){
             alert(odgovor.poruka)
             return
         }
-        //debugger; // ovo radi u Chrome inspect (ali i ostali preglednici)
         let s = odgovor.poruka
         setKategorija(s)
     } 
@@ -37,10 +36,9 @@ export default function KategorijePromjena(){
         navigate(RouteNames.KATEGORIJA_PREGLED)
     }
 
-    function obradiSubmit(e){ // e je event
-        e.preventDefault(); // nemoj odraditi zahtjev na server
+    function obradiSubmit(e){
+        e.preventDefault();
         let podaci = new FormData(e.target)
-        //console.log(podaci.get('naziv'))
         promjena({
             naziv: podaci.get('naziv'),
             cijena: parseFloat(podaci.get('cijena')),

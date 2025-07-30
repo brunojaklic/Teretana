@@ -5,7 +5,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-import Service from "../../services/GrupaService"; // primjetite promjenu naziva
+import Service from "../../services/GrupaService";
 import { RouteNames } from "../../constants";
 
 export default function GrupePregled(){
@@ -15,7 +15,6 @@ export default function GrupePregled(){
     async function dohvatiGrupe(){
         await Service.get()
         .then((odgovor)=>{
-            //console.log(odgovor);
             setGrupe(odgovor);
         })
         .catch((e)=>{console.log(e)});
@@ -23,7 +22,6 @@ export default function GrupePregled(){
 
     async function obrisiGrupu(sifra) {
         const odgovor = await Service.obrisi(sifra);
-        //console.log(odgovor);
         if(odgovor.greska){
             alert(odgovor.poruka);
             return;
@@ -33,7 +31,6 @@ export default function GrupePregled(){
 
     useEffect(()=>{
         dohvatiGrupe();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[]);
 
 

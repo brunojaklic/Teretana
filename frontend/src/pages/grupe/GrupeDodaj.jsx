@@ -22,7 +22,6 @@ export default function GrupeDodaj() {
 
   useEffect(()=>{
     dohvatiPrograme();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
   async function dodaj(e) {

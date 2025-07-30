@@ -4,7 +4,6 @@ import { HttpService } from "./HttpService"
 async function get(){
     return await HttpService.get('/Grupa')
     .then((odgovor)=>{
-        //console.table(odgovor.data);
         return odgovor.data;
     })
     .catch((e)=>{console.error(e)})
@@ -23,7 +22,6 @@ async function getBySifra(sifra){
 async function obrisi(sifra) {
     return await HttpService.delete('/Grupa/' + sifra)
     .then((odgovor)=>{
-        //console.log(odgovor);
         return {greska: false, poruka: odgovor.data}
     })
     .catch(()=>{
@@ -70,10 +68,43 @@ async function promjena(sifra,Grupa) {
     })
 }
 
+
+async function getVjezbaci(sifra){
+    return await HttpService.get('/Grupa/Vjezbaci/'+ sifra)
+    .then((odgovor)=>{
+        return {greska: false, poruka: odgovor.data}
+    })
+    .catch((e)=>{return {greska: true, poruka: 'Problem kod dohvaćanja vježbača'}})
+}
+
+async function dodajVjezbaca(grupa,vjezbac) {
+    return await HttpService.post('/Grupa/' + grupa + '/dodaj/'+vjezbac)
+    .then((odgovor)=>{
+        return {greska: false, poruka: odgovor.data}
+    })
+    .catch((e)=>{
+                return {greska: true, poruka: 'Vježbač se ne može dodati na grupu'}
+    })
+}
+
+async function obrisiVjezbaca(grupa,vjezbac) {
+    return await HttpService.delete('/Grupa/' + grupa + '/obrisi/'+vjezbac)
+    .then((odgovor)=>{
+        return {greska: false, poruka: odgovor.data}
+    })
+    .catch((e)=>{
+                return {greska: true, poruka: 'Vježbač se ne može obrisati iz grupe'}
+    })
+}
+
 export default{
     get,
     getBySifra,
     obrisi,
     dodaj,
-    promjena
+    promjena,
+
+    getVjezbaci,
+    dodajVjezbaca,
+    obrisiVjezbaca
 }

@@ -7,7 +7,7 @@ import { PRODUKCIJA, RouteNames } from '../constants';
 
 export default function NavBarEdunova(){
 
-    const navigate = useNavigate(); // U pravilu ; ne treba
+    const navigate = useNavigate();
 
     function OpenSwaggerURL(){
         window.open(PRODUKCIJA + "/swagger/index.html", "_blank")
