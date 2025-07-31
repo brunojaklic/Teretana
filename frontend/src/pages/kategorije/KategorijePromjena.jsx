@@ -1,79 +1,191 @@
-import KategorijaService from "../../services/KategorijaService"
-import { Button, Row, Col, Form } from "react-bootstrap";
-import moment from "moment";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { RouteNames } from "../../constants";
-import { useEffect, useState } from "react";
+import { Form, Row, Col, Table, Button } from 'react-bootstrap';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { FaTrash } from 'react-icons/fa';
+import Service from '../../services/KategorijaService';
+import VjezbacService from '../../services/VjezbacService';
+import { RouteNames } from '../../constants';
+import { AsyncTypeahead } from 'react-bootstrap-typeahead';
 
 
-export default function KategorijePromjena(){
+export default function KategorijePromjena() {
+  const navigate = useNavigate();
+  const routeParams = useParams();
 
-    const [kategorija,setKategorija] = useState({})
-    const [aktivan,setaktivan] = useState(false)
-    const navigate = useNavigate()
-    const routeParams = useParams()
+  const [vjezbaci, setVjezbaci] = useState([]);
+  const [pronadeniVjezbaci, setPronadeniVjezbaci] = useState([]);
 
-    async function dohvatiKategoriju(){
-        const odgovor = await KategorijaService.getBySifra(routeParams.sifra);
-        if(odgovor.greska){
-            alert(odgovor.poruka)
-            return
-        }
-        let s = odgovor.poruka
-        setKategorija(s)
-    } 
+  const [kategorija, setKategorija] = useState({});
 
-    useEffect(()=>{
-        dohvatiKategoriju();
-     },[])
+  const typeaheadRef = useRef(null);
 
-     async function promjena(kategorija) {
-        const odgovor = await KategorijaService.promjena(routeParams.sifra,kategorija)
-        if(odgovor.greska){
-            alert(odgovor.poruka)
-            return;
-        }
-        navigate(RouteNames.KATEGORIJA_PREGLED)
+  async function dohvatiKategorija() {
+    const odgovor = await Service.getBySifra(routeParams.sifra);
+    if(odgovor.greska){
+      alert(odgovor.poruka);
+      return;
+  }
+    let kategorija = odgovor.poruka;
+    setKategorija(kategorija);
+  }
+
+  async function dohvatiVjezbaci() {
+    const odgovor = await Service.getVjezbaci(routeParams.sifra);
+    if(odgovor.greska){
+      alert(odgovor.poruka);
+      return;
     }
+    setVjezbaci(odgovor.poruka);
+  }
 
-    function obradiSubmit(e){
-        e.preventDefault();
-        let podaci = new FormData(e.target)
-        promjena({
-            naziv: podaci.get('naziv'),
-            cijena: parseFloat(podaci.get('cijena')),
-            aktivan: podaci.get('aktivan')=='on' ? true : false 
-        })
+  async function traziVjezbac(uvjet) {
+    const odgovor =  await VjezbacService.traziVjezbac(uvjet);
+    if(odgovor.greska){
+      alert(odgovor.poruka);
+      return;
     }
+    setPronadeniVjezbaci(odgovor.poruka);
+  }
 
-    return(
-        <>
-        Promjena kategorije
-        <Form onSubmit={obradiSubmit}>
+  async function dodajVjezbaca(e) {
+    const odgovor = await Service.dodajVjezbaca(routeParams.sifra, e[0].sifra);
+    if(odgovor.greska){
+      alert(odgovor.poruka);
+      return;
+    }
+      await dohvatiVjezbaci();
+      typeaheadRef.current.clear();
+  }
 
-            <Form.Group controlId="naziv">
-                <Form.Label>Naziv</Form.Label>
-                <Form.Control type="text" name="naziv" required
-                defaultValue={kategorija.naziv} />
-            </Form.Group>
+  async function obrisiVjezbaca(vjezbac) {
+    const odgovor = await Service.obrisiVjezbaca(routeParams.sifra, vjezbac);
+    if(odgovor.greska){
+      alert(odgovor.poruka);
+      return;
+    }
+      await dohvatiVjezbaci();
+  }
+
+
+  async function dohvatiInicijalnePodatke() {
+    await dohvatiKategorija();
+    await dohvatiVjezbaci();
+  }
+
+
+  useEffect(()=>{
+    dohvatiInicijalnePodatke();
+  },[]);
+
+  async function promjena(e){
+    const odgovor = await Service.promjena(routeParams.sifra,e);
+    if(odgovor.greska){
+        alert(odgovor.poruka);
+        return;
+    }
+    navigate(RouteNames.KATEGORIJA_PREGLED);
+}
+
+  function obradiSubmit(e) {
+    e.preventDefault();
+
+    const podaci = new FormData(e.target);
+
+
+    promjena({
+      naziv: podaci.get('naziv'),
+      cijena: podaci.get('cijena')
+    });
+  }
+
+  return (
+      <>
+      Mjenjanje podataka kategorije
+      <Row>
+        <Col key='1' sm={12} lg={6} md={6}>
+          <Form onSubmit={obradiSubmit}>
+              <Form.Group controlId="naziv">
+                  <Form.Label>Naziv</Form.Label>
+                  <Form.Control type="text" name="naziv" required defaultValue={kategorija.naziv}/>
+              </Form.Group>
 
             <Form.Group controlId="cijena">
                 <Form.Label>Cijena</Form.Label>
                 <Form.Control type="number" step={0.01} name="cijena" defaultValue={kategorija.cijena}/>
             </Form.Group>
 
-        <Row className="akcije">
-            <Col xs={6} sm={12} md={3} lg={6} xl={6} xxl={6}>
-            <Link to={RouteNames.KATEGORIJA_PREGLED} 
-            className="btn btn-danger siroko">Odustani</Link>
-            </Col>
-            <Col xs={6} sm={12} md={9} lg={6} xl={6} xxl={6}>
-            <Button variant="success"
-            type="submit"
-            className="siroko">Promjeni kategoriju</Button>
-            </Col>
+
+              <hr />
+              <Row>
+                  <Col xs={6} sm={6} md={3} lg={6} xl={6} xxl={6}>
+                  <Link to={RouteNames.KATEGORIJA_PREGLED}
+                  className="btn btn-danger siroko">
+                  Odustani
+                  </Link>
+                  </Col>
+                  <Col xs={6} sm={6} md={9} lg={6} xl={6} xxl={6}>
+                  <Button variant="primary" type="submit" className="siroko">
+                      Promjeni kategoriju
+                  </Button>
+                  </Col>
+              </Row>
+          </Form>
+        </Col>
+        <Col key='2' sm={12} lg={6} md={6}>
+        <div style={{overflow: 'auto', maxHeight:'400px'}}>
+        <Form.Group className='mb-3' controlId='uvjet'>
+          <Form.Label>Traži vježbača</Form.Label>
+            <AsyncTypeahead
+            className='autocomplete'
+            id='uvjet'
+            emptyLabel='Nema rezultata'
+            searchText='Tražim...'
+            labelKey={(vjezbac) => `${vjezbac.prezime} ${vjezbac.ime}`}
+            minLength={3}
+            options={pronadeniVjezbaci}
+            onSearch={traziVjezbac}
+            placeholder='dio imena ili prezimena'
+            renderMenuItemChildren={(vjezbac) => (
+              <>
+                <span>
+                   {vjezbac.prezime} {vjezbac.ime}
+                </span>
+              </>
+            )}
+            onChange={dodajVjezbaca}
+            ref={typeaheadRef}
+            />
+          </Form.Group>
+          <Table striped bordered hover>
+            <thead>
+              <tr>
+                <th>Vježbači na kategoriji</th>
+                <th>Akcija</th>
+              </tr>
+            </thead>
+            <tbody>
+              {vjezbaci &&
+                vjezbaci.map((vjezbac, index) => (
+                  <tr key={index}>
+                    <td>
+                       {vjezbac.ime} {vjezbac.prezime}
+                      
+                    </td>
+                    <td>
+                      <Button variant='danger' onClick={() =>
+                          obrisiVjezbaca(vjezbac.sifra)
+                        } >
+                        <FaTrash />
+                      </Button>
+      
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
+          </div>
+        </Col>
         </Row>
-        </Form>
         </>
-    )
+  );
 }
