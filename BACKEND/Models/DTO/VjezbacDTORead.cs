@@ -5,6 +5,7 @@
         string Ime,
         string Prezime,
         string? Email,
+        string? Slika,
         string KategorijaNaziv
         );
 
