@@ -6,6 +6,15 @@ GO
 ALTER DATABASE db_abb4f7_wp8 SET MULTI_USER;
 GO
 
+create table operateri(
+sifra int not null primary key identity(1,1),
+email varchar(50) not null,
+lozinka varchar(200) not null
+);
+
+insert into operateri values ('operater@gmail.com',
+'$2a$12$tWG2YkOFWzP9oTCxdqje6Ohf6vu221YE6vYUcNz5GVnv/n66DADQS');
+
 create table programi(
 	sifra int not null primary key identity(1,1),
 	naziv varchar(50) not null,
