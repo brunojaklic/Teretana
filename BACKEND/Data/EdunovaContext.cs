@@ -19,6 +19,8 @@ namespace BACKEND.Data
 
         public DbSet<Kategorija> Kategorije { get; set; }
 
+        public DbSet<Operater> Operateri { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Grupa>().HasOne(g => g.Program);

@@ -23,10 +23,32 @@ namespace BACKEND.Mapping
             CreateMap<Kategorija, KategorijaDTOInsertUpdate>();
 
             CreateMap<Vjezbac, VjezbacDTORead>()
-                .ForMember(dest => dest.KategorijaNaziv, opt => opt.MapFrom(src => src.Kategorija.Naziv));
+                .ConstructUsing(entitet => new VjezbacDTORead(
+                    entitet.Sifra ?? 0,
+                    entitet.Ime ?? "",
+                    entitet.Prezime ?? "",
+                    entitet.Email ?? "",
+                    PutanjaDatoteke(entitet),
+                    entitet.Kategorija.Naziv));
             CreateMap<VjezbacDTOInsertUpdate, Vjezbac>()
                 .ForMember(dest => dest.Kategorija, opt => opt.Ignore());
             CreateMap<Vjezbac, VjezbacDTOInsertUpdate>();
         }
+
+        private static string? PutanjaDatoteke(Vjezbac e)
+        {
+            try
+            {
+                var ds = Path.DirectorySeparatorChar;
+                string slika = Path.Combine(Directory.GetCurrentDirectory()
+                    + ds + "wwwroot" + ds + "slike" + ds + "vjezbaci" + ds + e.Sifra + ".png");
+                return File.Exists(slika) ? "/slike/vjezbaci/" + e.Sifra + ".png" : null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
     }
 }
