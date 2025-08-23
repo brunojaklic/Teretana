@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BACKEND.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public abstract class TeretanaController : ControllerBase
     {
 

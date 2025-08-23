@@ -183,7 +183,7 @@ namespace BACKEND.Controllers
             uvjet = uvjet.ToLower();
             try
             {
-                IEnumerable<Vjezbac> query = _context.Vjezbaci;
+                IEnumerable<Vjezbac> query = _context.Vjezbaci.Include(x => x.Kategorija);
                 var niz = uvjet.Split(" ");
                 foreach (var s in uvjet.Split(" "))
                 {
@@ -206,7 +206,7 @@ namespace BACKEND.Controllers
             uvjet = uvjet.ToLower();
             try
             {
-                IEnumerable<Vjezbac> query = _context.Vjezbaci;
+                IEnumerable<Vjezbac> query = _context.Vjezbaci.Include(x=>x.Kategorija);
 
                 var niz = uvjet.Split(" ");
                 foreach (var s in uvjet.Split(" "))
@@ -234,7 +234,7 @@ namespace BACKEND.Controllers
             {
                 return BadRequest("Šifra mora biti veća od nula (0)");
             }
-            if (slika.Zapis == null || slika.Zapis?.Length == 0)
+            if (slika.Base64 == null || slika.Base64?.Length == 0)
             {
                 return BadRequest("Slika nije postavljena");
             }
@@ -254,7 +254,7 @@ namespace BACKEND.Controllers
                     System.IO.Directory.CreateDirectory(dir);
                 }
                 var putanja = Path.Combine(dir + ds + sifra + ".png");
-                System.IO.File.WriteAllBytes(putanja, Convert.FromBase64String(slika.Zapis!));
+                System.IO.File.WriteAllBytes(putanja, Convert.FromBase64String(slika.Base64!));
                 return Ok("Uspješno pohranjena slika");
             }
             catch (Exception e)

@@ -2,5 +2,5 @@
 
 namespace BACKEND.Models.DTO
 {
-    public record SlikaDTO([Required(ErrorMessage = "Zapis slike obavezno")] string Zapis);
+    public record SlikaDTO([Required(ErrorMessage = "Zapis slike obavezno")] string Base64);
 }

@@ -13,7 +13,7 @@ lozinka varchar(200) not null
 );
 
 insert into operateri values ('operater@gmail.com',
-'$2a$12$tWG2YkOFWzP9oTCxdqje6Ohf6vu221YE6vYUcNz5GVnv/n66DADQS');
+'$2a$12$6to/i30DmHDucetz.r3wDuhDjlXw1ioZ8naLAQhyx/eakznM/ERqK');
 
 create table programi(
 	sifra int not null primary key identity(1,1),

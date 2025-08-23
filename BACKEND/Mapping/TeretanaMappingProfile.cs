@@ -33,6 +33,12 @@ namespace BACKEND.Mapping
             CreateMap<VjezbacDTOInsertUpdate, Vjezbac>()
                 .ForMember(dest => dest.Kategorija, opt => opt.Ignore());
             CreateMap<Vjezbac, VjezbacDTOInsertUpdate>();
+
+            CreateMap<Grupa, GrafGrupaDTO>()
+                .ConstructUsing(entitet =>
+                    new GrafGrupaDTO(
+                        entitet.Naziv ?? "",
+                        entitet.Vjezbaci == null ? 0 : entitet.Vjezbaci.Count()));
         }
 
         private static string? PutanjaDatoteke(Vjezbac e)
