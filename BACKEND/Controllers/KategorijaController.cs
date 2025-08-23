@@ -11,7 +11,7 @@ namespace BACKEND.Controllers
 
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class KategorijaController(EdunovaContext context, IMapper mapper) : TeretanaController(context, mapper)
+    public class KategorijaController(TeretanaContext context, IMapper mapper) : TeretanaController(context, mapper)
     {
 
 

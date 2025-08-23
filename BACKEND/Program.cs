@@ -12,7 +12,7 @@ builder.Services.AddTeretanaSwaggerGen();
 builder.Services.AddTeretanaCORS();
 
 
-builder.Services.AddDbContext<EdunovaContext>(opcije => opcije.UseSqlServer(builder.Configuration.GetConnectionString("EdunovaContext")));
+builder.Services.AddDbContext<TeretanaContext>(opcije => opcije.UseSqlServer(builder.Configuration.GetConnectionString("EdunovaContext")));
 
 
 builder.Services.AddAutoMapper(cfg => {

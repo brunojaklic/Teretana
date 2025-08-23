@@ -11,7 +11,7 @@ namespace EdunovaAPP.Controllers
 
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class ProgramController(EdunovaContext context, IMapper mapper) : TeretanaController(context, mapper)
+    public class ProgramController(TeretanaContext context, IMapper mapper) : TeretanaController(context, mapper)
     {
 
 
@@ -154,8 +154,5 @@ namespace EdunovaAPP.Controllers
                 return BadRequest(new { poruka = ex.Message });
             }
         }
-
-
-
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace BACKEND.Models.DTO
+﻿ namespace BACKEND.Models.DTO
 {
-    public record GrafGrupaDto(string NazivGrupe, int UkupnoVjezbaca);
+    public record GrafGrupaDTO(string NazivGrupe, int UkupnoVjezbaca);
 }

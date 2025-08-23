@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BACKEND.Data
 {
-    public class EdunovaContext : DbContext
+    public class TeretanaContext : DbContext
     {
-        public EdunovaContext(DbContextOptions<EdunovaContext> opcije) : base(opcije)
+        public TeretanaContext(DbContextOptions<TeretanaContext> opcije) : base(opcije)
         {
 
         }

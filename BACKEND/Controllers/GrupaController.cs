@@ -10,7 +10,7 @@ namespace BACKEND.Controllers
 
     [ApiController]
     [Route("api/v1/[controller]")]
-    public class GrupaController(EdunovaContext context, IMapper mapper) : TeretanaController(context, mapper)
+    public class GrupaController(TeretanaContext context, IMapper mapper) : TeretanaController(context, mapper)
     {
 
 
@@ -296,6 +296,20 @@ namespace BACKEND.Controllers
             {
                 return BadRequest(new { poruka = ex.Message });
 
+            }
+        }
+
+        [HttpGet]
+        [Route("GrafGrupe")]
+        public ActionResult<List<GrafGrupaDTO>> GrafGrupe()
+        {
+            try
+            {
+                return Ok(_mapper.Map<List<GrafGrupaDTO>>(_context.Grupe.Include(g => g.Vjezbaci)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { poruka = ex.Message });
             }
         }
 
