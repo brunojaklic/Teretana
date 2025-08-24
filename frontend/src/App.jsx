@@ -1,9 +1,9 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import { Container, Navbar } from 'react-bootstrap'
-import NavbarEdunova from './components/NavBarEdunova'
 import { Route, Routes } from 'react-router-dom'
 import { RouteNames } from './constants'
+import NavBarEdunova from './components/NavBarEdunova'
 import Pocetna from './pages/Pocetna'
 import ProgramiPregled from './pages/programi/ProgramiPregled'
 import ProgramiDodaj from './pages/programi/ProgramiDodaj'
@@ -18,16 +18,40 @@ import VjezbaciPregled from './pages/vjezbaci/VjezbaciPregled';
 import VjezbaciDodaj from './pages/vjezbaci/VjezbaciDodaj';
 import VjezbaciPromjena from './pages/vjezbaci/VjezbaciPromjena';
 
+import LoadingSpinner from './components/LoadingSpinner'
+import Login from "./pages/Login"
+import useAuth from "./hooks/useAuth"
+import NadzornaPloca from './pages/NadzornaPloca'
+import useError from "./hooks/useError"
+import ErrorModal from "./components/ErrorModal"
+import EraDijagram from './pages/EraDiagram'
+
 
 function App() {
 
+  const { isLoggedIn } = useAuth();
+  const { errors, prikaziErrorModal, sakrijError } = useError();
 
+  function godina(){
+    const pocenta = 2025;
+    const trenutna = new Date().getFullYear();
+    if(pocenta===trenutna){
+      return trenutna;
+    }
+    return pocenta + ' - ' + trenutna;
+  }
+  
   return (
-    <Container>
-      <NavbarEdunova />
-      <Container className="app">
+    <>
+      <LoadingSpinner />
+      <ErrorModal show={prikaziErrorModal} errors={errors} onHide={sakrijError} />
+      <Container className='aplikacija'>
+        <NavBarEdunova />
         <Routes>
           <Route path={RouteNames.HOME} element={<Pocetna />} />
+          {isLoggedIn ? (
+        <>
+        <Route path={RouteNames.NADZORNA_PLOCA} element={<NadzornaPloca />} />
 
           <Route path={RouteNames.PROGRAM_PREGLED} element={<ProgramiPregled />} />
           <Route path={RouteNames.PROGRAM_NOVI} element={<ProgramiDodaj />} />
@@ -46,13 +70,20 @@ function App() {
           <Route path={RouteNames.VJEZBAC_PROMJENA} element={<VjezbaciPromjena />} />
 
 
-
+          <Route path={RouteNames.ERA} element={<EraDijagram />} /> 
+          </>
+        ) : (
+          <>
+            <Route path={RouteNames.LOGIN} element={<Login />} />
+          </>
+        )}
         </Routes>
       </Container>
-      <hr />
-      &copy; Bruno Jaklić
-
-    </Container>
+      <Container>
+        <hr />
+        Bruno Jaklić &copy; {godina()}
+      </Container>
+    </>
   )
 }
 

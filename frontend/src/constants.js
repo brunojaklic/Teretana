@@ -15,6 +15,10 @@ export const RouteNames = {
     GRUPA_NOVI: '/grupe/dodaj',
     GRUPA_PROMJENA: '/grupe/:sifra',
 
+    LOGIN: '/login',
+    NADZORNA_PLOCA: '/nadzornaploca',
+    ERA: '/era',
+
     KATEGORIJA_PREGLED: '/kategorije',
     KATEGORIJA_NOVA: '/kategorije/dodaj',
     KATEGORIJA_PROMJENA: '/kategorije/:sifra',

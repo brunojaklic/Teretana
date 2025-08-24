@@ -4,10 +4,14 @@ import { useEffect, useState } from 'react';
 import Service from '../../services/VjezbacService';
 import KategorijaService from '../../services/KategorijaService';
 import { RouteNames } from '../../constants';
+import useLoading from "../../hooks/useLoading";
+import useError from '../../hooks/useError';
 
 
 export default function KategorijeDodaj() {
     const navigate = useNavigate();
+    const { showLoading, hideLoading } = useLoading();
+    const { prikaziError } = useError();
 
     const [kategorije, setKategorije] = useState([]);
     const [kategorijaSifra, setKategorijaSifra] = useState(0);
@@ -25,9 +29,11 @@ export default function KategorijeDodaj() {
     }, []);
 
     async function dodaj(e) {
+        showLoading();
         const odgovor = await Service.dodaj(e);
+        hideLoading();
         if (odgovor.greska) {
-            alert(odgovor.poruka);
+            prikaziError(odgovor.poruka);
             return;
         }
         navigate(RouteNames.VJEZBAC_PREGLED);

@@ -32,7 +32,7 @@ async function dodaj(program){
             case 400:
                 let poruke='';
                 for(const kljuc in e.response.data.errors){
-                    poruke += kljuc + ': ' + e.response.data.errors[kljuc][0] + '\n';
+                    poruke += kljuc + ': ' + e.response.data.errors[kljuc][0] + ', ';
                 }
                 return {greska: true, poruka: poruke}
             default:
@@ -51,7 +51,7 @@ async function promjena(sifra,program){
             case 400:
                 let poruke='';
                 for(const kljuc in e.response.data.errors){
-                    poruke += kljuc + ': ' + e.response.data.errors[kljuc][0] + '\n';
+                    poruke += kljuc + ': ' + e.response.data.errors[kljuc][0] + ', ';
                 }
                 console.log(poruke)
                 return {greska: true, poruka: poruke}
@@ -71,11 +71,21 @@ async function getBySifra(sifra){
     })
 }
 
+async function dostupniProgrami(){
+    return await HttpService.get('/Pocetna/DostupniProgrami')
+    .then((odgovor)=>{
+        //console.table(odgovor.data);
+        return odgovor.data;
+    })
+    .catch((e)=>{console.error(e)})
+}
+
 
 export default {
     get,
     brisanje,
     dodaj,
     getBySifra,
-    promjena
+    promjena,
+    dostupniProgrami
 }

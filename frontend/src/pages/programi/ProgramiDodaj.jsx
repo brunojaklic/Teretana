@@ -2,16 +2,22 @@ import ProgramService from "../../services/ProgramService"
 import { Button, Row, Col, Form } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
+import useLoading from "../../hooks/useLoading";
+import useError from '../../hooks/useError';
 
 
 export default function ProgramiDodaj(){
 
     const navigate = useNavigate()
+    const { showLoading, hideLoading } = useLoading();
+    const { prikaziError } = useError();
 
     async function dodaj(program) {
+        showLoading();
         const odgovor = await ProgramService.dodaj(program)
+        hideLoading();
         if(odgovor.greska){
-            alert(odgovor.poruka)
+            prikaziError(odgovor.poruka)
             return;
         }
         navigate(RouteNames.PROGRAM_PREGLED)

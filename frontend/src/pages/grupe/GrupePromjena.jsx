@@ -7,11 +7,15 @@ import ProgramService from '../../services/ProgramService';
 import VjezbacService from '../../services/VjezbacService';
 import { RouteNames } from '../../constants';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
+import useLoading from "../../hooks/useLoading";
+import useError from '../../hooks/useError';
 
 
 export default function GrupePromjena() {
   const navigate = useNavigate();
+  const { showLoading, hideLoading } = useLoading();
   const routeParams = useParams();
+  const { prikaziError } = useError();
 
   const [programi, setProgrami] = useState([]);
   const [programSifra, setProgramSifra] = useState(0);
@@ -30,7 +34,7 @@ export default function GrupePromjena() {
   async function dohvatiGrupa() {
     const odgovor = await Service.getBySifra(routeParams.sifra);
     if(odgovor.greska){
-      alert(odgovor.poruka);
+      prikaziError(odgovor.poruka);
       return;
   }
     let grupa = odgovor.poruka;
@@ -41,7 +45,7 @@ export default function GrupePromjena() {
   async function dohvatiVjezbaci() {
     const odgovor = await Service.getVjezbaci(routeParams.sifra);
     if(odgovor.greska){
-      alert(odgovor.poruka);
+      prikaziError(odgovor.poruka);
       return;
     }
     setVjezbaci(odgovor.poruka);
@@ -50,16 +54,18 @@ export default function GrupePromjena() {
   async function traziVjezbac(uvjet) {
     const odgovor =  await VjezbacService.traziVjezbac(uvjet);
     if(odgovor.greska){
-      alert(odgovor.poruka);
+      prikaziError(odgovor.poruka);
       return;
     }
     setPronadeniVjezbaci(odgovor.poruka);
   }
 
   async function dodajVjezbaca(e) {
+    showLoading();
     const odgovor = await Service.dodajVjezbaca(routeParams.sifra, e[0].sifra);
+    hideLoading();
     if(odgovor.greska){
-      alert(odgovor.poruka);
+      prikaziError(odgovor.poruka);
       return;
     }
       await dohvatiVjezbaci();
@@ -67,9 +73,11 @@ export default function GrupePromjena() {
   }
 
   async function obrisiVjezbaca(vjezbac) {
+    showLoading();
     const odgovor = await Service.obrisiVjezbaca(routeParams.sifra, vjezbac);
+    hideLoading();
     if(odgovor.greska){
-      alert(odgovor.poruka);
+      prikaziError(odgovor.poruka);
       return;
     }
       await dohvatiVjezbaci();
@@ -77,9 +85,11 @@ export default function GrupePromjena() {
 
 
   async function dohvatiInicijalnePodatke() {
+    showLoading();
     await dohvatiPrograme();
     await dohvatiGrupa();
     await dohvatiVjezbaci();
+    hideLoading();
   }
 
 
@@ -88,9 +98,11 @@ export default function GrupePromjena() {
   },[]);
 
   async function promjena(e){
+    showLoading();
     const odgovor = await Service.promjena(routeParams.sifra,e);
+    hideLoading();
     if(odgovor.greska){
-        alert(odgovor.poruka);
+        prikaziError(odgovor.poruka);
         return;
     }
     navigate(RouteNames.GRUPA_PREGLED);

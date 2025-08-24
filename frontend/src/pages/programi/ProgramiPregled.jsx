@@ -6,18 +6,24 @@ import moment from "moment";
 import { GrValidate } from "react-icons/gr";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
+import useLoading from "../../hooks/useLoading";
+import useError from '../../hooks/useError';
 
 
 export default function ProgramiPregled(){
 
     const navigate = useNavigate()
+    const { showLoading, hideLoading } = useLoading();
+    const { prikaziError } = useError();
 
     const[programi, setProgrami] = useState([]);
 
     async function dohvatiPrograme(){
+        showLoading();
         const odgovor = await ProgramService.get();
+        hideLoading();
         if(odgovor.greska){
-            alert(odgovor.poruka)
+            prikaziError(odgovor.poruka)
             return
         }
         setProgrami(odgovor.poruka)
@@ -41,10 +47,11 @@ export default function ProgramiPregled(){
     }
 
     async function brisanjePrograma(sifra) {
-        
+        showLoading();
         const odgovor = await ProgramService.brisanje(sifra);
+        hideLoading();
         if(odgovor.greska){
-            alert(odgovor.poruka)
+            prikaziError(odgovor.poruka)
             return
         }
         dohvatiPrograme();

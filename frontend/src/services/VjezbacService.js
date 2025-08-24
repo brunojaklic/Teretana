@@ -39,7 +39,7 @@ async function dodaj(Vjezbac) {
             case 400:
                 let poruke='';
                 for(const kljuc in e.response.data.errors){
-                    poruke += kljuc + ': ' + e.response.data.errors[kljuc][0] + '\n';
+                    poruke += kljuc + ': ' + e.response.data.errors[kljuc][0] + ', ';
                 }
                 return {greska: true, poruka: poruke}
             default:
@@ -58,7 +58,7 @@ async function promjena(sifra,Vjezbac) {
             case 400:
                 let poruke='';
                 for(const kljuc in e.response.data.errors){
-                    poruke += kljuc + ': ' + e.response.data.errors[kljuc][0] + '\n';
+                    poruke += kljuc + ': ' + e.response.data.errors[kljuc][0] + ', ';
                 }
                 return {greska: true, poruka: poruke}
             default:
@@ -75,6 +75,26 @@ async function traziVjezbac(uvjet){
     .catch((e)=>{return {greska: true, poruka: 'Problem kod traženja vježbača'}})
 }
 
+async function getStranicenje(stranica,uvjet){
+    return await HttpService.get('/Vjezbac/traziStranicenje/'+stranica + '?uvjet=' + uvjet)
+    .then((odgovor)=>{return  {greska: false, poruka: odgovor.data};})
+    .catch((e)=>{ return {greska: true, poruka: 'Problem kod traženja vježbača '}});
+  }
+
+  async function postaviSliku(sifra, slika) {
+    return await HttpService.put('/Vjezbac/postaviSliku/' + sifra, slika)
+    .then((odgovor)=>{return  {greska: false, poruka: odgovor.data};})
+    .catch((e)=>{ return {greska: true, poruka: 'Problem kod postavljanja slike vježbača '}});
+  }
+
+  async function ukupnoVjezbaca(){
+    return await HttpService.get('/Pocetna/UkupnoVjezbaca')
+    .then((odgovor)=>{
+        return odgovor.data;
+    })
+    .catch((e)=>{console.error(e)})
+}
+
 
 
 export default{
@@ -83,5 +103,8 @@ export default{
     obrisi,
     dodaj,
     promjena,
-    traziVjezbac
+    traziVjezbac,
+    getStranicenje,
+    postaviSliku,
+    ukupnoVjezbaca
 }

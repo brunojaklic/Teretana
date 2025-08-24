@@ -6,18 +6,24 @@ import moment from "moment";
 import { GrValidate } from "react-icons/gr";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
+import useLoading from "../../hooks/useLoading";
+import useError from '../../hooks/useError';
 
 
 export default function KategorijePregled(){
 
     const navigate = useNavigate()
+    const { showLoading, hideLoading } = useLoading();
+    const { prikaziError } = useError();
 
-    const[kategorije, setKategorije] = useState([]);
+    const[kategorije, setKategorije] = useState();
 
     async function dohvatiKategorije(){
+        showLoading();
         const odgovor = await KategorijaService.get();
+        hideLoading();
         if(odgovor.greska){
-            alert(odgovor.poruka)
+            prikaziError(odgovor.poruka)
             return
         }
         setKategorije(odgovor.poruka)
@@ -36,10 +42,11 @@ export default function KategorijePregled(){
     }
 
     async function brisanjeKategorije(sifra) {
-        
+        showLoading();
         const odgovor = await KategorijaService.brisanje(sifra);
+        hideLoading();
         if(odgovor.greska){
-            alert(odgovor.poruka)
+            prikaziError(odgovor.poruka)
             return
         }
         dohvatiKategorije();

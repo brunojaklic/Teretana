@@ -4,24 +4,30 @@ import moment from "moment";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import { useEffect, useState } from "react";
+import useLoading from "../../hooks/useLoading";
+import useError from '../../hooks/useError';
 
 
 export default function ProgramiPromjena(){
 
     const [program,setProgram] = useState({})
-    const [aktivan,setaktivan] = useState(false)
+    const [aktivan,setAktivan] = useState(false)
     const navigate = useNavigate()
+    const { showLoading, hideLoading } = useLoading();
     const routeParams = useParams()
+    const { prikaziError } = useError();
 
     async function dohvatiProgram(){
+        showLoading();
         const odgovor = await ProgramService.getBySifra(routeParams.sifra);
+        hideLoading();
         if(odgovor.greska){
-            alert(odgovor.poruka)
+            prikaziError(odgovor.poruka)
             return
         }
         let s = odgovor.poruka
         setProgram(s)
-        setaktivan(s.aktivan)
+        setAktivan(s.aktivan)
     } 
 
     useEffect(()=>{
@@ -29,9 +35,11 @@ export default function ProgramiPromjena(){
      },[])
 
      async function promjena(program) {
+        showLoading();
         const odgovor = await ProgramService.promjena(routeParams.sifra,program)
+        hideLoading();
         if(odgovor.greska){
-            alert(odgovor.poruka)
+            prikaziError(odgovor.poruka)
             return;
         }
         navigate(RouteNames.PROGRAM_PREGLED)
@@ -64,8 +72,8 @@ export default function ProgramiPromjena(){
             </Form.Group>
 
             <Form.Group controlId="aktivan">
-                <Form.Check label="Vaučer" name="aktivan" 
-                onChange={(e)=>setaktivan(e.target.checked)}
+                <Form.Check label="Aktivan" name="aktivan" 
+                onChange={(e)=>setAktivan(e.target.checked)}
                 checked={aktivan}  />
             </Form.Group>
 

@@ -4,16 +4,23 @@ import { useEffect, useState } from 'react';
 import Service from '../../services/GrupaService';
 import ProgramService from '../../services/ProgramService';
 import { RouteNames } from '../../constants';
+import useLoading from "../../hooks/useLoading";
+import useError from '../../hooks/useError';
 
 
 export default function GrupeDodaj() {
   const navigate = useNavigate();
+  const { showLoading, hideLoading } = useLoading();
 
   const [programi, setProgrami] = useState([]);
   const [programSifra, setProgramSifra] = useState(0);
 
+  const { prikaziError } = useError();
+
   async function dohvatiPrograme(){
+    showLoading();
     const odgovor = await ProgramService.get();
+    hideLoading();
     setProgrami(odgovor.poruka);
     setProgramSifra(odgovor.poruka[0].sifra);
   }
@@ -25,9 +32,11 @@ export default function GrupeDodaj() {
   },[]);
 
   async function dodaj(e) {
+    showLoading();
     const odgovor = await Service.dodaj(e);
+    hideLoading();
     if(odgovor.greska){
-      alert(odgovor.poruka);
+      prikaziError(odgovor.poruka);
       return;
     }
     navigate(RouteNames.GRUPA_PREGLED);

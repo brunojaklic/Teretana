@@ -6,10 +6,14 @@ import Service from '../../services/KategorijaService';
 import VjezbacService from '../../services/VjezbacService';
 import { RouteNames } from '../../constants';
 import { AsyncTypeahead } from 'react-bootstrap-typeahead';
+import useLoading from "../../hooks/useLoading";
+import useError from '../../hooks/useError';
 
 
 export default function KategorijePromjena() {
   const navigate = useNavigate();
+  const { showLoading, hideLoading } = useLoading();
+  const { prikaziError } = useError();
   const routeParams = useParams();
 
   const [vjezbaci, setVjezbaci] = useState([]);
@@ -20,9 +24,11 @@ export default function KategorijePromjena() {
   const typeaheadRef = useRef(null);
 
   async function dohvatiKategorija() {
+    showLoading();
     const odgovor = await Service.getBySifra(routeParams.sifra);
+    hideLoading();
     if(odgovor.greska){
-      alert(odgovor.poruka);
+      prikaziError(odgovor.poruka)
       return;
   }
     let kategorija = odgovor.poruka;
@@ -30,27 +36,33 @@ export default function KategorijePromjena() {
   }
 
   async function dohvatiVjezbaci() {
+    showLoading();
     const odgovor = await Service.getVjezbaci(routeParams.sifra);
+    hideLoading();
     if(odgovor.greska){
-      alert(odgovor.poruka);
+      prikaziError(odgovor.poruka)
       return;
     }
     setVjezbaci(odgovor.poruka);
   }
 
   async function traziVjezbac(uvjet) {
+    showLoading();
     const odgovor =  await VjezbacService.traziVjezbac(uvjet);
+    hideLoading();
     if(odgovor.greska){
-      alert(odgovor.poruka);
+      prikaziError(odgovor.poruka)
       return;
     }
     setPronadeniVjezbaci(odgovor.poruka);
   }
 
   async function dodajVjezbaca(e) {
+    showLoading();
     const odgovor = await Service.dodajVjezbaca(routeParams.sifra, e[0].sifra);
+    hideLoading();
     if(odgovor.greska){
-      alert(odgovor.poruka);
+      prikaziError(odgovor.poruka)
       return;
     }
       await dohvatiVjezbaci();
@@ -58,9 +70,11 @@ export default function KategorijePromjena() {
   }
 
   async function obrisiVjezbaca(vjezbac) {
+    showLoading();
     const odgovor = await Service.obrisiVjezbaca(routeParams.sifra, vjezbac);
+    hideLoading();
     if(odgovor.greska){
-      alert(odgovor.poruka);
+      prikaziError(odgovor.poruka)
       return;
     }
       await dohvatiVjezbaci();
@@ -68,8 +82,10 @@ export default function KategorijePromjena() {
 
 
   async function dohvatiInicijalnePodatke() {
+    showLoading();
     await dohvatiKategorija();
     await dohvatiVjezbaci();
+    hideLoading();
   }
 
 
@@ -78,9 +94,11 @@ export default function KategorijePromjena() {
   },[]);
 
   async function promjena(e){
+    showLoading();
     const odgovor = await Service.promjena(routeParams.sifra,e);
+    hideLoading();
     if(odgovor.greska){
-        alert(odgovor.poruka);
+        prikaziError(odgovor.poruka);
         return;
     }
     navigate(RouteNames.KATEGORIJA_PREGLED);
