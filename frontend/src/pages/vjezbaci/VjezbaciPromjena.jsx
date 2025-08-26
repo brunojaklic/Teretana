@@ -59,7 +59,7 @@ export default function VjezbaciPromjena(){
         navigate(RouteNames.VJEZBAC_PREGLED);
     }
 
-    function obradiSubmit(e){ // e predstavlja event
+    function obradiSubmit(e){
         e.preventDefault();
 
         const podaci = new FormData(e.target);

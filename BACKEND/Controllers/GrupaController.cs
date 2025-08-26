@@ -196,7 +196,9 @@ namespace BACKEND.Controllers
             try
             {
                 var p = _context.Grupe
-                    .Include(i => i.Vjezbaci).FirstOrDefault(x => x.Sifra == sifraGrupe);
+                    .Include(i => i.Vjezbaci)
+                    .ThenInclude(v => v.Kategorija)
+                    .FirstOrDefault(x => x.Sifra == sifraGrupe);
                 if (p == null)
                 {
                     return BadRequest("Ne postoji grupa s šifrom " + sifraGrupe + " u bazi");
