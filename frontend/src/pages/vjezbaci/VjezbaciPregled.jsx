@@ -43,6 +43,7 @@ export default function VjezbaciPregled(){
 
     async function obrisiAsync(sifra) {
         showLoading();
+        const odgovor = await VjezbacService.obrisi(sifra);
         hideLoading();
         if(odgovor.greska){
             prikaziError(odgovor.poruka);
