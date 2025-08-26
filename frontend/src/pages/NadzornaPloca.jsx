@@ -53,6 +53,7 @@ export default function NadzornaPloca() {
 
 const fixedOptions = {
   chart: {
+    backgroundColor: '#121212',
     plotBackgroundColor: null,
     plotBorderWidth: null,
     plotShadow: false,
@@ -61,9 +62,15 @@ const fixedOptions = {
   title: {
     text: 'Broj vježbača po grupi',
     align: 'left',
+    style: {
+      color: '#e0e0e0',
+    },
   },
   tooltip: {
     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
+    style: {
+      color: '#121212', 
+    },
   },
   accessibility: {
     enabled: false,
@@ -78,6 +85,9 @@ const fixedOptions = {
       dataLabels: {
         enabled: true,
         format: '<b>{point.name}</b>',
+        style: {
+          color: '#e0e0e0',
+        },
       },
     },
   },

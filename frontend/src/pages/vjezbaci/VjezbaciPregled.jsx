@@ -2,7 +2,7 @@ import { Button, Card, Col, Form, Pagination, Row } from "react-bootstrap";
 import VjezbacService from "../../services/VjezbacService";
 import { useEffect, useState } from "react";
 import { PRODUKCIJA, RouteNames } from "../../constants";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import nepoznato from '../../assets/nepoznato.jpg'; 
 import { IoIosAdd } from "react-icons/io";
 import { FaEdit, FaTrash } from "react-icons/fa";
@@ -13,6 +13,7 @@ import useError from '../../hooks/useError';
 
 export default function VjezbaciPregled(){
 
+    const navigate = useNavigate();
     const[vjezbaci,setVjezbaci] = useState();
     const [stranica, setStranica] = useState(1);
     const [uvjet, setUvjet] = useState('');
@@ -23,6 +24,11 @@ export default function VjezbaciPregled(){
 
     async function dohvatiVjezbace() {
         showLoading();
+         if(stranica<1){
+            hideLoading();
+            setUvjet('');
+            return;
+        }
         const odgovor = await VjezbacService.getStranicenje(stranica,uvjet);
         hideLoading();
         if(odgovor.greska){
@@ -43,6 +49,7 @@ export default function VjezbaciPregled(){
 
     async function obrisiAsync(sifra) {
         showLoading();
+        setUvjet('');
         const odgovor = await VjezbacService.obrisi(sifra);
         hideLoading();
         if(odgovor.greska){

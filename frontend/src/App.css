@@ -34,3 +34,134 @@
 .brojVjezbaca{
   font-size: 5rem;
 }
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar.bg-body-tertiary {
+    background-color: #1c1c1c !important;
+    border-bottom: 1px solid #333;
+    margin-bottom: 1rem;
+}
+
+.navbar-brand {
+    color: #f8f9fa !important;
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin-left: 1rem;
+}
+
+.navbar-nav .nav-link {
+    color: #e0e0e0 !important;
+    transition: color 0.3s;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus {
+    color: #8afc86 !important;
+}
+
+.navbar-nav .dropdown-toggle {
+    color: #e0e0e0 !important;
+}
+
+.dropdown-menu {
+    background-color: #2a2a2a !important;
+    border: 1px solid #444;
+}
+
+.dropdown-item {
+    color: #e0e0e0 !important;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+    background-color: #3a3a3a !important;
+    color: #8afc86 !important;
+}
+
+.navbar-toggler {
+    border-color: #666 !important;
+    background-color: #333;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28 255, 255, 255, 0.8 %29)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+.navbar-collapse {
+    background-color: #1c1c1c;
+}
+
+
+main {
+    padding: 2rem;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff;
+}
+
+p {
+    line-height: 1.6;
+    color: #cccccc;
+}
+
+a {
+    color: #90caf9;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #64b5f6;
+}
+
+button {
+    background-color: #333333;
+    color: #ffffff;
+    border: 1px solid #444;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+button:hover {
+    background-color: #444444;
+}
+
+input, textarea, select {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    border: 1px solid #333;
+    padding: 0.5rem;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: #bb86fc;
+    outline: none;
+}
+
+footer {
+    background-color: #1f1f1f;
+    color: #aaaaaa;
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
