@@ -4,8 +4,15 @@ using BACKEND.Models.DTO;
 
 namespace BACKEND.Mapping
 {
+    /// <summary>
+    /// AutoMapper profil za mapiranje entiteta i DTO objekata vezanih uz teretanu.
+    /// Definira pravila mapiranja između modela baze podataka i DTO klasa.
+    /// </summary>
     public class TeretanaMappingProfile : Profile
     {
+        /// <summary>
+        /// Inicijalizira nova pravila mapiranja između entiteta i DTO objekata.
+        /// </summary>
         public TeretanaMappingProfile()
         {
             CreateMap<TreningProgram, ProgramDTORead>();
@@ -41,6 +48,11 @@ namespace BACKEND.Mapping
                         entitet.Vjezbaci == null ? 0 : entitet.Vjezbaci.Count()));
         }
 
+        /// <summary>
+        /// Vraća relativnu putanju do slike vježbača ako slika postoji, inače vraća null.
+        /// </summary>
+        /// <param name="e">Vježbač za kojeg se traži putanja slike.</param>
+        /// <returns>Relativna putanja do slike ili null ako slika ne postoji.</returns>
         private static string? PutanjaDatoteke(Vjezbac e)
         {
             try

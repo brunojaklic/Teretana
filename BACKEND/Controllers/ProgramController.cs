@@ -1,20 +1,25 @@
 ﻿using AutoMapper;
-using BACKEND.Controllers;
 using BACKEND.Data;
 using BACKEND.Models;
 using BACKEND.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace EdunovaAPP.Controllers
+namespace BACKEND.Controllers
 {
 
+    /// <summary>
+    /// API kontroler za upravljanje entitetima TreningProgram.
+    /// Omogućuje dohvat, dodavanje, ažuriranje i brisanje programa.
+    /// </summary>
     [ApiController]
     [Route("api/v1/[controller]")]
     public class ProgramController(TeretanaContext context, IMapper mapper) : TeretanaController(context, mapper)
     {
-
-
+        /// <summary>
+        /// Dohvaća sve programe iz baze i vraća ih kao listu DTO objekata.
+        /// </summary>
+        /// <returns>Lista svih programa.</returns>
         [HttpGet]
         public ActionResult<List<ProgramDTORead>> Get()
         {
@@ -30,10 +35,13 @@ namespace EdunovaAPP.Controllers
             {
                 return BadRequest(new { poruka = ex.Message });
             }
-
         }
 
-
+        /// <summary>
+        /// Dohvaća program prema zadanoj šifri.
+        /// </summary>
+        /// <param name="sifra">Šifra programa.</param>
+        /// <returns>DTO objekt programa ili poruka o grešci.</returns>
         [HttpGet]
         [Route("{sifra:int}")]
         public ActionResult<ProgramDTOInsertUpdate> GetBySifra(int sifra)
@@ -42,7 +50,7 @@ namespace EdunovaAPP.Controllers
             {
                 return BadRequest(new { poruka = ModelState });
             }
-            BACKEND.Models.TreningProgram? e;
+            TreningProgram? e;
             try
             {
                 e = _context.Programi.Find(sifra);
@@ -59,6 +67,11 @@ namespace EdunovaAPP.Controllers
             return Ok(_mapper.Map<ProgramDTOInsertUpdate>(e));
         }
 
+        /// <summary>
+        /// Dodaje novi program u bazu.
+        /// </summary>
+        /// <param name="dto">DTO objekt s podacima o programu.</param>
+        /// <returns>Kreirani program ili poruka o grešci.</returns>
         [HttpPost]
         public IActionResult Post(ProgramDTOInsertUpdate dto)
         {
@@ -68,7 +81,7 @@ namespace EdunovaAPP.Controllers
             }
             try
             {
-                var e = _mapper.Map<BACKEND.Models.TreningProgram>(dto);
+                var e = _mapper.Map<TreningProgram>(dto);
                 _context.Programi.Add(e);
                 _context.SaveChanges();
                 return StatusCode(StatusCodes.Status201Created, _mapper.Map<ProgramDTORead>(e));
@@ -77,11 +90,14 @@ namespace EdunovaAPP.Controllers
             {
                 return BadRequest(new { poruka = ex.Message });
             }
-
-
-
         }
 
+        /// <summary>
+        /// Ažurira postojeći program prema šifri.
+        /// </summary>
+        /// <param name="sifra">Šifra programa za ažuriranje.</param>
+        /// <param name="dto">DTO objekt s novim podacima.</param>
+        /// <returns>Poruka o uspjehu ili grešci.</returns>
         [HttpPut]
         [Route("{sifra:int}")]
         [Produces("application/json")]
@@ -93,7 +109,7 @@ namespace EdunovaAPP.Controllers
             }
             try
             {
-                BACKEND.Models.TreningProgram? e;
+                TreningProgram? e;
                 try
                 {
                     e = _context.Programi.Find(sifra);
@@ -118,9 +134,13 @@ namespace EdunovaAPP.Controllers
             {
                 return BadRequest(new { poruka = ex.Message });
             }
-
         }
 
+        /// <summary>
+        /// Briše program iz baze prema zadanoj šifri.
+        /// </summary>
+        /// <param name="sifra">Šifra programa za brisanje.</param>
+        /// <returns>Poruka o uspjehu ili grešci.</returns>
         [HttpDelete]
         [Route("{sifra:int}")]
         [Produces("application/json")]
@@ -132,7 +152,7 @@ namespace EdunovaAPP.Controllers
             }
             try
             {
-                BACKEND.Models.TreningProgram? e;
+                TreningProgram? e;
                 try
                 {
                     e = _context.Programi.Find(sifra);

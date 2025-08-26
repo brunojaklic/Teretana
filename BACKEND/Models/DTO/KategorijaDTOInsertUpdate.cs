@@ -2,10 +2,14 @@
 
 namespace BACKEND.Models.DTO
 {
+    /// <summary>
+    /// DTO zapis za unos ili ažuriranje entiteta Kategorija.
+    /// Sadrži svojstva za naziv i cijenu kategorije s pripadajućim validacijama.
+    /// </summary>
     public record KategorijaDTOInsertUpdate(
         [Required(ErrorMessage = "Naziv obavezno")]
-        string Naziv,
+            string Naziv,
         [Range(0, 10000, ErrorMessage = "Vrijednost {0} mora biti između {1} i {2}")]
-        decimal? Cijena
+            decimal? Cijena
         );
 }

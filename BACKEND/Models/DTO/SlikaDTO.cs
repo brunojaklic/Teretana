@@ -2,5 +2,9 @@
 
 namespace BACKEND.Models.DTO
 {
-    public record SlikaDTO([Required(ErrorMessage = "Zapis slike obavezno")] string Base64);
+    /// <summary>
+    /// DTO zapis koji predstavlja sliku kodiranu u Base64 formatu.
+    /// </summary>
+    public record SlikaDTO(
+        [Required(ErrorMessage = "Zapis slike obavezno")] string Base64);
 }

@@ -7,14 +7,24 @@ using System.Text;
 
 namespace BACKEND.Controllers
 {
+    /// <summary>
+    /// Kontroler za autorizaciju operatera i generiranje JWT tokena.
+    /// </summary>
     [ApiController]
     [Route("api/v1/[controller]")]
     public class AutorizacijaController(TeretanaContext context) : ControllerBase
     {
-
+        /// <summary>
+        /// Kontekst baze podataka za pristup operaterima.
+        /// </summary>
         private readonly TeretanaContext _context = context;
 
-
+        /// <summary>
+        /// Generira JWT token za operatera na temelju dostavljenih vjerodajnica (email i lozinka).
+        /// Vraća token ako su vjerodajnice ispravne, inače vraća odgovarajuću grešku.
+        /// </summary>
+        /// <param name="operater">DTO objekt s emailom i lozinkom operatera.</param>
+        /// <returns>JWT token ili status greške.</returns>
         [HttpPost("token")]
         public IActionResult GenerirajToken(OperaterDTO operater)
         {

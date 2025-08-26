@@ -8,12 +8,18 @@ using Microsoft.EntityFrameworkCore;
 namespace BACKEND.Controllers
 {
 
+    /// <summary>
+    /// Kontroler za upravljanje grupama u teretani.
+    /// Omogućuje CRUD operacije i rad s vježbačima unutar grupa.
+    /// </summary>
     [ApiController]
     [Route("api/v1/[controller]")]
     public class GrupaController(TeretanaContext context, IMapper mapper) : TeretanaController(context, mapper)
     {
-
-
+        /// <summary>
+        /// Dohvaća sve grupe s pripadajućim programima.
+        /// </summary>
+        /// <returns>Lista grupa u DTO obliku.</returns>
         [HttpGet]
         public ActionResult<List<GrupaDTORead>> Get()
         {
@@ -29,10 +35,13 @@ namespace BACKEND.Controllers
             {
                 return BadRequest(new { poruka = ex.Message });
             }
-
         }
 
-
+        /// <summary>
+        /// Dohvaća grupu prema šifri.
+        /// </summary>
+        /// <param name="sifra">Šifra grupe</param>
+        /// <returns>Grupa u DTO obliku za unos/izmjenu.</returns>
         [HttpGet]
         [Route("{sifra:int}")]
         public ActionResult<GrupaDTOInsertUpdate> GetBySifra(int sifra)
@@ -58,6 +67,11 @@ namespace BACKEND.Controllers
             return Ok(_mapper.Map<GrupaDTOInsertUpdate>(e));
         }
 
+        /// <summary>
+        /// Dodaje novu grupu.
+        /// </summary>
+        /// <param name="dto">DTO podaci za unos grupe</param>
+        /// <returns>Kreirana grupa u DTO obliku.</returns>
         [HttpPost]
         public IActionResult Post(GrupaDTOInsertUpdate dto)
         {
@@ -92,11 +106,14 @@ namespace BACKEND.Controllers
             {
                 return BadRequest(new { poruka = ex.Message });
             }
-
-
-
         }
 
+        /// <summary>
+        /// Ažurira postojeću grupu prema šifri.
+        /// </summary>
+        /// <param name="sifra">Šifra grupe</param>
+        /// <param name="dto">DTO podaci za izmjenu grupe</param>
+        /// <returns>Status izmjene.</returns>
         [HttpPut]
         [Route("{sifra:int}")]
         [Produces("application/json")]
@@ -147,9 +164,13 @@ namespace BACKEND.Controllers
             {
                 return BadRequest(new { poruka = ex.Message });
             }
-
         }
 
+        /// <summary>
+        /// Briše grupu prema šifri.
+        /// </summary>
+        /// <param name="sifra">Šifra grupe</param>
+        /// <returns>Status brisanja.</returns>
         [HttpDelete]
         [Route("{sifra:int}")]
         [Produces("application/json")]
@@ -184,7 +205,11 @@ namespace BACKEND.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Dohvaća sve vježbače unutar određene grupe.
+        /// </summary>
+        /// <param name="sifraGrupe">Šifra grupe</param>
+        /// <returns>Lista vježbača u DTO obliku.</returns>
         [HttpGet]
         [Route("Vjezbaci/{sifraGrupe:int}")]
         public ActionResult<List<VjezbacDTORead>> GetVjezbaci(int sifraGrupe)
@@ -212,8 +237,12 @@ namespace BACKEND.Controllers
             }
         }
 
-
-
+        /// <summary>
+        /// Dodaje vježbača u grupu.
+        /// </summary>
+        /// <param name="sifra">Šifra grupe</param>
+        /// <param name="vjezbacSifra">Šifra vježbača</param>
+        /// <returns>Status dodavanja.</returns>
         [HttpPost]
         [Route("{sifra:int}/dodaj/{vjezbacSifra:int}")]
         public IActionResult DodajVjezbaca(int sifra, int vjezbacSifra)
@@ -257,7 +286,12 @@ namespace BACKEND.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Briše vježbača iz grupe.
+        /// </summary>
+        /// <param name="sifra">Šifra grupe</param>
+        /// <param name="vjezbacSifra">Šifra vježbača</param>
+        /// <returns>Status brisanja.</returns>
         [HttpDelete]
         [Route("{sifra:int}/obrisi/{vjezbacSifra:int}")]
         public IActionResult ObrisiVjezbaca(int sifra, int vjezbacSifra)
@@ -297,10 +331,13 @@ namespace BACKEND.Controllers
             catch (Exception ex)
             {
                 return BadRequest(new { poruka = ex.Message });
-
             }
         }
 
+        /// <summary>
+        /// Dohvaća podatke za grafički prikaz grupa i njihovih vježbača.
+        /// </summary>
+        /// <returns>Lista podataka za graf.</returns>
         [HttpGet]
         [Route("GrafGrupe")]
         public ActionResult<List<GrafGrupaDTO>> GrafGrupe()
@@ -314,7 +351,5 @@ namespace BACKEND.Controllers
                 return BadRequest(new { poruka = ex.Message });
             }
         }
-
-
     }
 }

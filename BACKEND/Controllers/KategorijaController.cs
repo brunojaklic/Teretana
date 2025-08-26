@@ -9,12 +9,18 @@ using Microsoft.EntityFrameworkCore;
 namespace BACKEND.Controllers
 {
 
+    /// <summary>
+    /// Kontroler za upravljanje kategorijama i povezanim vježbačima.
+    /// Omogućuje CRUD operacije nad kategorijama te dodavanje i uklanjanje vježbača iz kategorija.
+    /// </summary>
     [ApiController]
     [Route("api/v1/[controller]")]
     public class KategorijaController(TeretanaContext context, IMapper mapper) : TeretanaController(context, mapper)
     {
-
-
+        /// <summary>
+        /// Dohvaća sve kategorije iz baze.
+        /// </summary>
+        /// <returns>Lista DTO objekata kategorija.</returns>
         [HttpGet]
         public ActionResult<List<KategorijaDTORead>> Get()
         {
@@ -30,10 +36,13 @@ namespace BACKEND.Controllers
             {
                 return BadRequest(new { poruka = ex.Message });
             }
-
         }
 
-
+        /// <summary>
+        /// Dohvaća kategoriju prema šifri.
+        /// </summary>
+        /// <param name="sifra">Šifra kategorije.</param>
+        /// <returns>DTO objekt kategorije za unos/izmjenu.</returns>
         [HttpGet]
         [Route("{sifra:int}")]
         public ActionResult<KategorijaDTOInsertUpdate> GetBySifra(int sifra)
@@ -59,6 +68,11 @@ namespace BACKEND.Controllers
             return Ok(_mapper.Map<KategorijaDTOInsertUpdate>(e));
         }
 
+        /// <summary>
+        /// Dodaje novu kategoriju u bazu.
+        /// </summary>
+        /// <param name="dto">DTO objekt za unos/izmjenu kategorije.</param>
+        /// <returns>Kreirani DTO objekt kategorije.</returns>
         [HttpPost]
         public IActionResult Post(KategorijaDTOInsertUpdate dto)
         {
@@ -77,11 +91,14 @@ namespace BACKEND.Controllers
             {
                 return BadRequest(new { poruka = ex.Message });
             }
-
-
-
         }
 
+        /// <summary>
+        /// Ažurira postojeću kategoriju prema šifri.
+        /// </summary>
+        /// <param name="sifra">Šifra kategorije.</param>
+        /// <param name="dto">DTO objekt za unos/izmjenu kategorije.</param>
+        /// <returns>Poruka o uspješnosti ažuriranja.</returns>
         [HttpPut]
         [Route("{sifra:int}")]
         [Produces("application/json")]
@@ -118,9 +135,13 @@ namespace BACKEND.Controllers
             {
                 return BadRequest(new { poruka = ex.Message });
             }
-
         }
 
+        /// <summary>
+        /// Briše kategoriju prema šifri.
+        /// </summary>
+        /// <param name="sifra">Šifra kategorije.</param>
+        /// <returns>Poruka o uspješnosti brisanja.</returns>
         [HttpDelete]
         [Route("{sifra:int}")]
         [Produces("application/json")]
@@ -155,6 +176,11 @@ namespace BACKEND.Controllers
             }
         }
 
+        /// <summary>
+        /// Dohvaća sve vježbače povezane s određenom kategorijom.
+        /// </summary>
+        /// <param name="sifraKategorije">Šifra kategorije.</param>
+        /// <returns>Lista DTO objekata vježbača.</returns>
         [HttpGet]
         [Route("Vjezbaci/{sifraKategorije:int}")]
         public ActionResult<List<VjezbacDTORead>> GetVjezbaci(int sifraKategorije)
@@ -180,8 +206,12 @@ namespace BACKEND.Controllers
             }
         }
 
-
-
+        /// <summary>
+        /// Dodaje vježbača u određenu kategoriju.
+        /// </summary>
+        /// <param name="sifra">Šifra kategorije.</param>
+        /// <param name="vjezbacSifra">Šifra vježbača.</param>
+        /// <returns>Poruka o uspješnosti dodavanja.</returns>
         [HttpPost]
         [Route("{sifra:int}/dodaj/{vjezbacSifra:int}")]
         public IActionResult DodajVjezbaca(int sifra, int vjezbacSifra)
@@ -225,7 +255,12 @@ namespace BACKEND.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Uklanja vježbača iz određene kategorije i premješta ga u kategoriju Početnik.
+        /// </summary>
+        /// <param name="sifra">Šifra kategorije.</param>
+        /// <param name="vjezbacSifra">Šifra vježbača.</param>
+        /// <returns>Poruka o uspješnosti premještanja.</returns>
         [HttpDelete]
         [Route("{sifra:int}/obrisi/{vjezbacSifra:int}")]
         public IActionResult ObrisiVjezbaca(int sifra, int vjezbacSifra)
@@ -278,10 +313,5 @@ namespace BACKEND.Controllers
                 return BadRequest(new { poruka = ex.Message });
             }
         }
-
-
-
-
-
     }
 }

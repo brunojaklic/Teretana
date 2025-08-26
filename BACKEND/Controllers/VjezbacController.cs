@@ -9,12 +9,18 @@ using Microsoft.EntityFrameworkCore;
 namespace BACKEND.Controllers
 {
 
+    /// <summary>
+    /// Kontroler za upravljanje entitetima Vježbač.
+    /// Omogućuje dohvat, pretragu, dodavanje, ažuriranje, brisanje i generiranje vježbača.
+    /// </summary>
     [ApiController]
     [Route("api/v1/[controller]")]
     public class VjezbacController(TeretanaContext context, IMapper mapper) : TeretanaController(context, mapper)
     {
-
-
+        /// <summary>
+        /// Dohvaća sve vježbače iz baze podataka.
+        /// </summary>
+        /// <returns>Lista DTO objekata vježbača.</returns>
         [HttpGet]
         public ActionResult<List<VjezbacDTORead>> Get()
         {
@@ -28,18 +34,19 @@ namespace BACKEND.Controllers
                     .Include(v => v.Kategorija)
                     .ToList();
 
-
                 return Ok(_mapper.Map<List<VjezbacDTORead>>(vjezbaci));
-
             }
             catch (Exception ex)
             {
                 return BadRequest(new { poruka = ex.Message });
             }
-
         }
 
-
+        /// <summary>
+        /// Dohvaća vježbača prema šifri.
+        /// </summary>
+        /// <param name="sifra">Šifra vježbača.</param>
+        /// <returns>DTO objekt vježbača za unos ili ažuriranje.</returns>
         [HttpGet]
         [Route("{sifra:int}")]
         public ActionResult<VjezbacDTOInsertUpdate> GetBySifra(int sifra)
@@ -54,7 +61,6 @@ namespace BACKEND.Controllers
                 e = _context.Vjezbaci
                 .Include(v => v.Kategorija)
                 .FirstOrDefault(v => v.Sifra == sifra);
-
             }
             catch (Exception ex)
             {
@@ -68,6 +74,11 @@ namespace BACKEND.Controllers
             return Ok(_mapper.Map<VjezbacDTOInsertUpdate>(e));
         }
 
+        /// <summary>
+        /// Dodaje novog vježbača u bazu podataka.
+        /// </summary>
+        /// <param name="dto">DTO objekt za unos vježbača.</param>
+        /// <returns>Status kreiranja i DTO objekt vježbača.</returns>
         [HttpPost]
         public IActionResult Post(VjezbacDTOInsertUpdate dto)
         {
@@ -98,7 +109,12 @@ namespace BACKEND.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Ažurira podatke postojećeg vježbača.
+        /// </summary>
+        /// <param name="sifra">Šifra vježbača.</param>
+        /// <param name="dto">DTO objekt s novim podacima.</param>
+        /// <returns>Status ažuriranja.</returns>
         [HttpPut]
         [Route("{sifra:int}")]
         [Produces("application/json")]
@@ -135,9 +151,13 @@ namespace BACKEND.Controllers
             {
                 return BadRequest(new { poruka = ex.Message });
             }
-
         }
 
+        /// <summary>
+        /// Briše vježbača iz baze podataka.
+        /// </summary>
+        /// <param name="sifra">Šifra vježbača.</param>
+        /// <returns>Status brisanja.</returns>
         [HttpDelete]
         [Route("{sifra:int}")]
         [Produces("application/json")]
@@ -172,6 +192,11 @@ namespace BACKEND.Controllers
             }
         }
 
+        /// <summary>
+        /// Pretražuje vježbače prema uvjetu (ime ili prezime).
+        /// </summary>
+        /// <param name="uvjet">Uvjet pretrage (najmanje 3 znaka).</param>
+        /// <returns>Lista pronađenih vježbača.</returns>
         [HttpGet]
         [Route("trazi/{uvjet}")]
         public ActionResult<List<VjezbacDTORead>> TraziVjezbac(string uvjet)
@@ -198,6 +223,12 @@ namespace BACKEND.Controllers
             }
         }
 
+        /// <summary>
+        /// Pretražuje vježbače prema uvjetu s podrškom za stranicenje.
+        /// </summary>
+        /// <param name="stranica">Broj stranice.</param>
+        /// <param name="uvjet">Uvjet pretrage (opcionalno).</param>
+        /// <returns>Lista pronađenih vježbača za zadanu stranicu.</returns>
         [HttpGet]
         [Route("traziStranicenje/{stranica}")]
         public IActionResult TraziVjezbacStranicenje(int stranica, string uvjet = "")
@@ -206,7 +237,7 @@ namespace BACKEND.Controllers
             uvjet = uvjet.ToLower();
             try
             {
-                IEnumerable<Vjezbac> query = _context.Vjezbaci.Include(x=>x.Kategorija);
+                IEnumerable<Vjezbac> query = _context.Vjezbaci.Include(x => x.Kategorija);
 
                 var niz = uvjet.Split(" ");
                 foreach (var s in uvjet.Split(" "))
@@ -225,7 +256,12 @@ namespace BACKEND.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Postavlja sliku za vježbača.
+        /// </summary>
+        /// <param name="sifra">Šifra vježbača.</param>
+        /// <param name="slika">DTO objekt slike (Base64 string).</param>
+        /// <returns>Status pohrane slike.</returns>
         [HttpPut]
         [Route("postaviSliku/{sifra:int}")]
         public IActionResult PostaviSliku(int sifra, SlikaDTO slika)
@@ -263,6 +299,11 @@ namespace BACKEND.Controllers
             }
         }
 
+        /// <summary>
+        /// Generira nasumične vježbače i sprema ih u bazu podataka.
+        /// </summary>
+        /// <param name="broj">Broj vježbača za generiranje.</param>
+        /// <returns>Status generiranja.</returns>
         [HttpGet]
         [Route("Generiraj/{broj:int}")]
         public IActionResult Generiraj(int broj)
@@ -289,9 +330,5 @@ namespace BACKEND.Controllers
             _context.SaveChanges();
             return Ok();
         }
-
-
-
-
     }
 }
