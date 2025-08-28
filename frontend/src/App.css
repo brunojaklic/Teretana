@@ -165,3 +165,93 @@ footer {
     margin: 0 auto;
     padding: 0 1rem;
 }
+
+table{
+    margin-top: 1rem;
+}
+
+.table th {
+  background-color: #1f1f1f;
+  color: #ffffff;
+  border: 1px solid #444 !important;
+}
+
+.table td {
+  background-color: #2c2c2c;
+  color: #ffffff !important;
+  border: 1px solid #444 !important;
+}
+
+.card {
+  background-color: #1c1c1c !important;
+  color: #e0e0e0 !important;
+  border: 1px solid #444 !important;
+}
+
+.card-title {
+  color: #ffffff !important;
+  font-weight: bold;
+}
+
+.card-text {
+  color: #aaaaaa !important;
+}
+
+.pagination {
+  --bs-pagination-bg: #2a2a2a;
+  --bs-pagination-color: #ffffff;
+  --bs-pagination-border-color: #444;
+  --bs-pagination-hover-bg: #444;
+  --bs-pagination-hover-color: #8afc86;
+  --bs-pagination-disabled-bg: #1c1c1c;
+  --bs-pagination-disabled-color: #777;
+}
+
+.btn-primary {
+  background-color: #4581bd !important;
+  border-color: #4581bd !important;
+}
+
+.btn-primary:hover {
+  background-color: #356094 !important;
+  border-color: #356094 !important;
+}
+
+.btn-danger {
+  background-color: #c42b2b !important;
+  border-color: #a12323 !important;
+}
+
+.btn-success {
+  background-color: #28a745 !important;
+  border-color: #218838 !important;
+}
+
+.form-control {
+  background-color: #1e1e1e !important;
+  color: #ffffff !important;
+  border: 1px solid #444 !important;
+}
+
+.form-control:focus {
+  border-color: #8afc86 !important;
+  box-shadow: none !important;
+}
+
+.form-control::placeholder {
+  color: #747474;
+}
+
+.form-select {
+  background-color: #1e1e1e;
+  color: #ffffff;             
+  border: 1px solid #444;
+}
+
+.form-select:focus {
+  border-color: #8afc86;
+  box-shadow: none;
+}
+
+
+

@@ -18,19 +18,12 @@ export default function Login() {
 
   return (
     <Container className='mt-4'>
-        <p>
-            email: operater@gmail.com
-        </p>
-        <p>
-            lozinka: edunova
-        </p>
       <Form onSubmit={handleSubmit}>
         <Form.Group className='mb-3' controlId='email'>
           <Form.Label>Email</Form.Label>
           <Form.Control
             type='text'
             name='email'
-            placeholder='operater@gmail.com'
             maxLength={255}
             required
           />
