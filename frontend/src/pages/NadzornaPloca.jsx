@@ -5,33 +5,35 @@ import PieChart from 'highcharts-react-official';
 import Service from '../services/GrupaService';
 import useLoading from '../hooks/useLoading';
 
+/**
+ * Nadzorna ploča prikazuje grafički prikaz broja vježbača po grupama
+ */
 export default function NadzornaPloca() {
   const [podaci, setPodaci] = useState([]);
   const { showLoading, hideLoading } = useLoading();
 
-
-
-
+  // Dohvaća podatke za graf
   async function getPodaci() {
     showLoading();
-    const odgovor = await Service.grafGrupe();
-    setPodaci(odgovor.map((grupa) => {
-      return {
-        y: grupa.ukupnoVjezbaca,
-        name: grupa.nazivGrupe,
-      };
-    }));
-    hideLoading();
+    try {
+      const odgovor = await Service.grafGrupe();
+      setPodaci(
+        odgovor.map((grupa) => ({
+          y: grupa.ukupnoVjezbaca,
+          name: grupa.nazivGrupe,
+        }))
+      );
+    } finally {
+      hideLoading();
+    }
   }
 
   useEffect(() => {
     getPodaci();
   }, []);
 
-
-
   return (
-    <Container className='mt-4'>
+    <Container className="mt-4">
       {podaci.length > 0 && (
         <PieChart
           highcharts={Highcharts}
@@ -51,6 +53,7 @@ export default function NadzornaPloca() {
   );
 }
 
+// Fiksne postavke za pie chart
 const fixedOptions = {
   chart: {
     backgroundColor: '#121212',
@@ -69,7 +72,7 @@ const fixedOptions = {
   tooltip: {
     pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
     style: {
-      color: '#121212', 
+      color: '#121212',
     },
   },
   accessibility: {

@@ -7,7 +7,14 @@ import { RouteNames } from '../../constants';
 import useLoading from "../../hooks/useLoading";
 import useError from '../../hooks/useError';
 
-
+/**
+ * KategorijeDodaj
+ * 
+ * Komponenta za dodavanje novog vježbača.
+ * - Dohvaća sve kategorije iz baze i omogućava odabir kategorije za vježbača.
+ * - Koristi hookove `useLoading` i `useError` za prikaz loading statusa i eventualnih grešaka.
+ * - Nakon uspješnog dodavanja, preusmjerava korisnika na pregled vježbača.
+ */
 export default function KategorijeDodaj() {
     const navigate = useNavigate();
     const { showLoading, hideLoading } = useLoading();
@@ -16,18 +23,30 @@ export default function KategorijeDodaj() {
     const [kategorije, setKategorije] = useState([]);
     const [kategorijaSifra, setKategorijaSifra] = useState(0);
 
+    /**
+     * dohvatiKategorije
+     * 
+     * Dohvaća sve kategorije iz baze podataka i postavlja prvu kategoriju kao default.
+     */
     async function dohvatiKategorije() {
         const odgovor = await KategorijaService.get();
         setKategorije(odgovor.poruka);
         setKategorijaSifra(odgovor.poruka[0].sifra);
     }
 
-
-
     useEffect(() => {
         dohvatiKategorije();
     }, []);
 
+    /**
+     * dodaj
+     * 
+     * Funkcija koja šalje zahtjev za dodavanje novog vježbača.
+     * Ako dođe do greške, prikazuje poruku greške.
+     * Ako je uspješno, preusmjerava korisnika na pregled vježbača.
+     * 
+     * @param {Object} e - Podaci novog vježbača
+     */
     async function dodaj(e) {
         showLoading();
         const odgovor = await Service.dodaj(e);
@@ -39,11 +58,19 @@ export default function KategorijeDodaj() {
         navigate(RouteNames.VJEZBAC_PREGLED);
     }
 
+    /**
+     * obradiSubmit
+     * 
+     * Funkcija koja obrađuje submit forme.
+     * - Sprema podatke iz forme u objekt.
+     * - Poziva funkciju `dodaj` s tim podacima.
+     * 
+     * @param {Event} e - Submit event forme
+     */
     function obradiSubmit(e) {
         e.preventDefault();
 
         const podaci = new FormData(e.target);
-
 
         dodaj({
             ime: podaci.get('ime'),
@@ -56,8 +83,6 @@ export default function KategorijeDodaj() {
     return (
         <>
             Dodavanje novog vježbača
-
-
 
             <Form onSubmit={obradiSubmit}>
 

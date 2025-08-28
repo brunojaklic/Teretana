@@ -1,6 +1,9 @@
-import { HttpService } from "./HttpService"
+import { HttpService } from "./HttpService";
 
-
+/**
+ * Dohvaća sve vježbače.
+ * @returns {Promise<any[]>} - Lista vježbača
+ */
 async function get(){
     return await HttpService.get('/Vjezbac')
     .then((odgovor)=>{
@@ -9,6 +12,11 @@ async function get(){
     .catch((e)=>{console.error(e)})
 }
 
+/**
+ * Dohvaća vježbača po šifri.
+ * @param {number} sifra - Šifra vježbača
+ * @returns {Promise<{greska: boolean, poruka: any|string}>}
+ */
 async function getBySifra(sifra){
     return await HttpService.get('/Vjezbac/' + sifra)
     .then((odgovor)=>{
@@ -19,6 +27,11 @@ async function getBySifra(sifra){
     })
 }
 
+/**
+ * Briše vježbača po šifri.
+ * @param {number} sifra - Šifra vježbača
+ * @returns {Promise<{greska: boolean, poruka: any|string}>}
+ */
 async function obrisi(sifra) {
     return await HttpService.delete('/Vjezbac/' + sifra)
     .then((odgovor)=>{
@@ -29,6 +42,11 @@ async function obrisi(sifra) {
     })
 }
 
+/**
+ * Dodaje novog vježbača.
+ * @param {Object} Vjezbac - Objekt vježbača
+ * @returns {Promise<{greska: boolean, poruka: any|string}>}
+ */
 async function dodaj(Vjezbac) {
     return await HttpService.post('/Vjezbac',Vjezbac)
     .then((odgovor)=>{
@@ -48,6 +66,12 @@ async function dodaj(Vjezbac) {
     })
 }
 
+/**
+ * Mijenja podatke vježbača po šifri.
+ * @param {number} sifra - Šifra vježbača
+ * @param {Object} Vjezbac - Objekt s podacima za promjenu
+ * @returns {Promise<{greska: boolean, poruka: any|string}>}
+ */
 async function promjena(sifra,Vjezbac) {
     return await HttpService.put('/Vjezbac/' + sifra,Vjezbac)
     .then((odgovor)=>{
@@ -67,35 +91,54 @@ async function promjena(sifra,Vjezbac) {
     })
 }
 
+/**
+ * Traži vježbače prema uvjetu.
+ * @param {string} uvjet - Tekstualni uvjet za pretragu
+ * @returns {Promise<{greska: boolean, poruka: any|string}>}
+ */
 async function traziVjezbac(uvjet){
     return await HttpService.get('/Vjezbac/trazi/'+uvjet)
     .then((odgovor)=>{
         return {greska: false, poruka: odgovor.data}
     })
-    .catch((e)=>{return {greska: true, poruka: 'Problem kod traženja vježbača'}})
+    .catch(()=>{return {greska: true, poruka: 'Problem kod traženja vježbača'}})
 }
 
+/**
+ * Dohvaća vježbače s paginacijom i uvjetom.
+ * @param {number} stranica - Broj stranice
+ * @param {string} uvjet - Tekstualni uvjet pretrage
+ * @returns {Promise<{greska: boolean, poruka: any|string}>}
+ */
 async function getStranicenje(stranica,uvjet){
     return await HttpService.get('/Vjezbac/traziStranicenje/'+stranica + '?uvjet=' + uvjet)
     .then((odgovor)=>{return  {greska: false, poruka: odgovor.data};})
-    .catch((e)=>{ return {greska: true, poruka: 'Problem kod traženja vježbača '}});
-  }
+    .catch(()=>{ return {greska: true, poruka: 'Problem kod traženja vježbača '}} );
+}
 
-  async function postaviSliku(sifra, slika) {
+/**
+ * Postavlja sliku vježbača.
+ * @param {number} sifra - Šifra vježbača
+ * @param {Object} slika - Objekt sa slikom u Base64 formatu
+ * @returns {Promise<{greska: boolean, poruka: any|string}>}
+ */
+async function postaviSliku(sifra, slika) {
     return await HttpService.put('/Vjezbac/postaviSliku/' + sifra, slika)
     .then((odgovor)=>{return  {greska: false, poruka: odgovor.data};})
-    .catch((e)=>{ return {greska: true, poruka: 'Problem kod postavljanja slike vježbača '}});
-  }
+    .catch(()=>{ return {greska: true, poruka: 'Problem kod postavljanja slike vježbača '}} );
+}
 
-  async function ukupnoVjezbaca(){
+/**
+ * Dohvaća ukupan broj vježbača.
+ * @returns {Promise<number>}
+ */
+async function ukupnoVjezbaca(){
     return await HttpService.get('/Pocetna/UkupnoVjezbaca')
     .then((odgovor)=>{
         return odgovor.data;
     })
     .catch((e)=>{console.error(e)})
 }
-
-
 
 export default{
     get,

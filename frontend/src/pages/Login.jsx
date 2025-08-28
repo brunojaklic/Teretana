@@ -3,6 +3,11 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import useAuth from '../hooks/useAuth';
 
+/**
+ * Login komponenta
+ * 
+ * Omogućuje korisniku unos emaila i lozinke te poziva hook za autentikaciju.
+ */
 export default function Login() {
   const { login } = useAuth();
 
@@ -17,22 +22,28 @@ export default function Login() {
   }
 
   return (
-    <Container className='mt-4'>
+    <Container className="mt-4">
       <Form onSubmit={handleSubmit}>
-        <Form.Group className='mb-3' controlId='email'>
+        <Form.Group className="mb-3" controlId="email">
           <Form.Label>Email</Form.Label>
           <Form.Control
-            type='text'
-            name='email'
+            type="text"
+            name="email"
             maxLength={255}
             required
           />
         </Form.Group>
-        <Form.Group className='mb-3' controlId='lozinka'>
+
+        <Form.Group className="mb-3" controlId="lozinka">
           <Form.Label>Lozinka</Form.Label>
-          <Form.Control type='password' name='lozinka' required />
+          <Form.Control
+            type="password"
+            name="lozinka"
+            required
+          />
         </Form.Group>
-        <Button variant='primary' className='gumb' type='submit'>
+
+        <Button variant="primary" type="submit" className="gumb">
           Autoriziraj
         </Button>
       </Form>

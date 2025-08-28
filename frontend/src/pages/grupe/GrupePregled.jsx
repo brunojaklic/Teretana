@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Container, Table } from "react-bootstrap";
 import { IoIosAdd } from "react-icons/io";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import Service from "../../services/GrupaService";
 import { RouteNames } from "../../constants";
@@ -11,45 +10,65 @@ import { RouteNames } from "../../constants";
 import useLoading from "../../hooks/useLoading";
 import useError from '../../hooks/useError';
 
-export default function GrupePregled(){
-    const [grupe,setGrupe] = useState();
+/**
+ * GrupePregled
+ * 
+ * Komponenta za pregled svih grupa u aplikaciji.
+ * - Dohvaća sve grupe iz backend-a i prikazuje ih u tablici.
+ * - Omogućava dodavanje, uređivanje i brisanje grupa.
+ * - Koristi hookove `useLoading` i `useError` za prikaz loading statusa i grešaka.
+ */
+export default function GrupePregled() {
+    const [grupe, setGrupe] = useState();
     let navigate = useNavigate();
     const { showLoading, hideLoading } = useLoading();
     const { prikaziError } = useError(); 
 
-    async function dohvatiGrupe(){
+    /**
+     * dohvatiGrupe
+     * 
+     * Funkcija koja dohvaća sve grupe iz backend-a.
+     * - Postavlja dohvaćene grupe u stanje `grupe`.
+     * - Prikazuje loading status dok traju zahtjevi.
+     */
+    async function dohvatiGrupe() {
         showLoading();
         await Service.get()
-        .then((odgovor)=>{
+        .then((odgovor) => {
             setGrupe(odgovor);
         })
-        .catch((e)=>{console.log(e)});
+        .catch((e) => { console.log(e) });
         hideLoading();
     }
 
+    /**
+     * obrisiGrupu
+     * 
+     * Funkcija koja briše grupu po šifri.
+     * - Ako dođe do greške, prikazuje poruku greške.
+     * - Nakon brisanja, ponovno dohvaća sve grupe kako bi osvježila tablicu.
+     * 
+     * @param {number} sifra - Šifra grupe koja se briše
+     */
     async function obrisiGrupu(sifra) {
         showLoading();
         const odgovor = await Service.obrisi(sifra);
         hideLoading();
-        if(odgovor.greska){
+        if (odgovor.greska) {
             prikaziError(odgovor.poruka);
             return;
         }
         dohvatiGrupe();
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         dohvatiGrupe();
-    },[]);
-
+    }, []);
 
     return (
-
         <Container>
             <Link to={RouteNames.GRUPA_NOVI} className="btn btn-success siroko">
-                <IoIosAdd
-                size={25}
-                /> Dodaj
+                <IoIosAdd size={25} /> Dodaj
             </Link>
             <Table striped bordered hover responsive>
                 <thead>
@@ -61,38 +80,30 @@ export default function GrupePregled(){
                     </tr>
                 </thead>
                 <tbody>
-                    {grupe && grupe.map((entitet,index)=>(
+                    {grupe && grupe.map((entitet, index) => (
                         <tr key={index}>
                             <td>{entitet.naziv}</td>
                             <td>{entitet.programNaziv}</td>
                             <td>{entitet.trener}</td>
                             <td className="sredina">
-                                    <Button
-                                        variant='primary'
-                                        onClick={()=>{navigate(`/grupe/${entitet.sifra}`)}}
-                                    >
-                                        <FaEdit 
-                                    size={25}
-                                    />
-                                    </Button>
-                               
-                                
-                                    &nbsp;&nbsp;&nbsp;
-                                    <Button
-                                        variant='danger'
-                                        onClick={() => obrisiGrupu(entitet.sifra)}
-                                    >
-                                        <FaTrash
-                                        size={25}/>
-                                    </Button>
-
+                                <Button
+                                    variant='primary'
+                                    onClick={() => { navigate(`/grupe/${entitet.sifra}`) }}
+                                >
+                                    <FaEdit size={25} />
+                                </Button>
+                                &nbsp;&nbsp;&nbsp;
+                                <Button
+                                    variant='danger'
+                                    onClick={() => obrisiGrupu(entitet.sifra)}
+                                >
+                                    <FaTrash size={25}/>
+                                </Button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </Table>
         </Container>
-
     );
-
 }

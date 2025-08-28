@@ -9,70 +9,95 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import useLoading from "../../hooks/useLoading";
 import useError from '../../hooks/useError';
 
-
-
-export default function VjezbaciPregled(){
+/**
+ * VjezbaciPregled
+ * 
+ * Komponenta za pregled vježbača:
+ * - Omogućava filtriranje po imenu/prezimenu
+ * - Prikazuje vježbače u obliku kartica (Card)
+ * - Omogućava brisanje i uređivanje vježbača
+ * - Podržava paginaciju
+ */
+export default function VjezbaciPregled() {
 
     const navigate = useNavigate();
-    const[vjezbaci,setVjezbaci] = useState();
+    const [vjezbaci, setVjezbaci] = useState();
     const [stranica, setStranica] = useState(1);
     const [uvjet, setUvjet] = useState('');
     const { showLoading, hideLoading } = useLoading();
     const { prikaziError } = useError();
 
-
-
+    /**
+     * dohvatiVjezbace
+     * 
+     * Dohvaća vježbače sa servera koristeći paginaciju i uvjet pretrage.
+     * Ako nema rezultata za trenutnu stranicu, smanjuje stranicu za 1.
+     */
     async function dohvatiVjezbace() {
         showLoading();
-         if(stranica<1){
+        if (stranica < 1) {
             hideLoading();
             setUvjet('');
             return;
         }
-        const odgovor = await VjezbacService.getStranicenje(stranica,uvjet);
+        const odgovor = await VjezbacService.getStranicenje(stranica, uvjet);
         hideLoading();
-        if(odgovor.greska){
+        if (odgovor.greska) {
             prikaziError(odgovor.poruka);
-            
             return;
         }
-        if(odgovor.poruka.length==0){
-            setStranica(stranica-1);
+        if (odgovor.poruka.length == 0) {
+            setStranica(stranica - 1);
             return;
         }
         setVjezbaci(odgovor.poruka);
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         dohvatiVjezbace();
-    },[stranica, uvjet]);
+    }, [stranica, uvjet]);
 
+    /**
+     * obrisiAsync
+     * 
+     * Asinkrono brisanje vježbača.
+     * Nakon brisanja ponovo učitava listu vježbača.
+     */
     async function obrisiAsync(sifra) {
         showLoading();
         setUvjet('');
         const odgovor = await VjezbacService.obrisi(sifra);
         hideLoading();
-        if(odgovor.greska){
+        if (odgovor.greska) {
             prikaziError(odgovor.poruka);
             return;
         }
         dohvatiVjezbace();
     }
 
-    function obrisi(sifra){
+    function obrisi(sifra) {
         obrisiAsync(sifra);
     }
 
-    function slika(vjezbac){
-        if(vjezbac.slika!=null){
-            return PRODUKCIJA + vjezbac.slika+ `?${Date.now()}`;
+    /**
+     * slika
+     * 
+     * Vraća URL slike vježbača, ili default sliku ako nije postavljena.
+     */
+    function slika(vjezbac) {
+        if (vjezbac.slika != null) {
+            return PRODUKCIJA + vjezbac.slika + `?${Date.now()}`;
         }
         return nepoznato;
     }
 
+    /**
+     * promjeniUvjet
+     * 
+     * Promjena uvjeta pretrage pri pritisku Enter
+     */
     function promjeniUvjet(e) {
-        if(e.nativeEvent.key == "Enter"){
-            console.log('Enter')
+        if (e.nativeEvent.key == "Enter") {
             setStranica(1);
             setUvjet(e.nativeEvent.srcElement.value);
             setVjezbaci([]);
@@ -81,91 +106,80 @@ export default function VjezbaciPregled(){
 
     function povecajStranicu() {
         setStranica(stranica + 1);
-      }
-    
-      function smanjiStranicu() {
-        if(stranica==1){
-            return;
-        }
+    }
+
+    function smanjiStranicu() {
+        if (stranica == 1) return;
         setStranica(stranica - 1);
-      }
+    }
 
-
-    return(
+    return (
         <>
-           <Row>
+            <Row>
                 <Col key={1} sm={12} lg={4} md={4}>
                     <Form.Control
-                    type='text'
-                    name='trazilica'
-                    placeholder='Dio imena i prezimena [Enter]'
-                    maxLength={255}
-                    defaultValue=''
-                    onKeyUp={promjeniUvjet}
+                        type='text'
+                        name='trazilica'
+                        placeholder='Dio imena i prezimena [Enter]'
+                        maxLength={255}
+                        defaultValue=''
+                        onKeyUp={promjeniUvjet}
                     />
                 </Col>
                 <Col key={2} sm={12} lg={4} md={4}>
                     {vjezbaci && vjezbaci.length > 0 && (
-                            <div style={{ display: "flex", justifyContent: "center" }}>
-                                <Pagination size="lg">
+                        <div style={{ display: "flex", justifyContent: "center" }}>
+                            <Pagination size="lg">
                                 <Pagination.Prev onClick={smanjiStranicu} />
-                                <Pagination.Item disabled>{stranica}</Pagination.Item> 
-                                <Pagination.Next
-                                    onClick={povecajStranicu}
-                                />
+                                <Pagination.Item disabled>{stranica}</Pagination.Item>
+                                <Pagination.Next onClick={povecajStranicu} />
                             </Pagination>
                         </div>
                     )}
                 </Col>
                 <Col key={3} sm={12} lg={4} md={4}>
                     <Link to={RouteNames.VJEZBAC_NOVI} className="btn btn-success gumb">
-                        <IoIosAdd
-                        size={25}
-                        /> Dodaj
+                        <IoIosAdd size={25} /> Dodaj
                     </Link>
                 </Col>
             </Row>
-            
-                
+
             <Row>
-                
-            { vjezbaci && vjezbaci.map((p) => (
-           
-           <Col key={p.sifra} sm={12} lg={3} md={3}>
-              <Card style={{ marginTop: '1rem' }}>
-              <Card.Img variant="top" src={slika(p)} className="slika"/>
-                <Card.Body>
-                  <Card.Title>{p.ime} {p.prezime}</Card.Title>
-                  <Card.Text>
-                    {p.email}
-                  </Card.Text>
-                  <Row>
-                      <Col>
-                      <Link className="btn btn-primary gumb" to={`/vjezbaci/${p.sifra}`}><FaEdit /></Link>
-                      </Col>
-                      <Col>
-                      <Button variant="danger" className="gumb"  onClick={() => obrisi(p.sifra)}><FaTrash /></Button>
-                      </Col>
-                    </Row>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))
-      }
-      </Row>
-      <hr />
-              {vjezbaci && vjezbaci.length > 0 && (
+                {vjezbaci && vjezbaci.map((p) => (
+                    <Col key={p.sifra} sm={12} lg={3} md={3}>
+                        <Card style={{ marginTop: '1rem' }}>
+                            <Card.Img variant="top" src={slika(p)} className="slika" />
+                            <Card.Body>
+                                <Card.Title>{p.ime} {p.prezime}</Card.Title>
+                                <Card.Text>{p.email}</Card.Text>
+                                <Row>
+                                    <Col>
+                                        <Link className="btn btn-primary gumb" to={`/vjezbaci/${p.sifra}`}>
+                                            <FaEdit />
+                                        </Link>
+                                    </Col>
+                                    <Col>
+                                        <Button variant="danger" className="gumb" onClick={() => obrisi(p.sifra)}>
+                                            <FaTrash />
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                ))}
+            </Row>
+
+            <hr />
+            {vjezbaci && vjezbaci.length > 0 && (
                 <div style={{ display: "flex", justifyContent: "center" }}>
                     <Pagination size="lg">
-                    <Pagination.Prev onClick={smanjiStranicu} />
-                    <Pagination.Item disabled>{stranica}</Pagination.Item> 
-                    <Pagination.Next
-                        onClick={povecajStranicu}
-                    />
+                        <Pagination.Prev onClick={smanjiStranicu} />
+                        <Pagination.Item disabled>{stranica}</Pagination.Item>
+                        <Pagination.Next onClick={povecajStranicu} />
                     </Pagination>
                 </div>
-                )}
+            )}
         </>
-    )
-
+    );
 }

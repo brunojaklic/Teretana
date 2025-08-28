@@ -1,13 +1,14 @@
-import ERA_SSMS from '../assets/ERA_SSMS.png'; 
+import ERA_SSMS from '../assets/ERA_SSMS.png';
 
-
-export default function EraDijagram(){
-
-   
-
-    return(
+/**
+ * EraDijagram
+ * 
+ * Prikazuje statičnu sliku ERA dijagrama iz assets foldera.
+ */
+export default function EraDijagram() {
+    return (
         <>
-        <img src={ERA_SSMS} alt="ERA" />
-            </>
-    )
+            <img src={ERA_SSMS} alt="ER Dijagram" />
+        </>
+    );
 }

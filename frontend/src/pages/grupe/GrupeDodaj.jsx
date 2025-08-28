@@ -1,4 +1,4 @@
-import { Button, Col, Container, Form, Row} from 'react-bootstrap';
+import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Service from '../../services/GrupaService';
@@ -7,7 +7,15 @@ import { RouteNames } from '../../constants';
 import useLoading from "../../hooks/useLoading";
 import useError from '../../hooks/useError';
 
-
+/**
+ * GrupeDodaj
+ * 
+ * Komponenta za dodavanje nove grupe u aplikaciji.
+ * - Dohvaća dostupne programe i prikazuje ih u padajućem izborniku.
+ * - Omogućava unos naziva grupe i trenera.
+ * - Koristi hookove `useLoading` i `useError` za prikaz loading statusa i grešaka.
+ * - Nakon uspješnog dodavanja, preusmjerava korisnika na pregled grupa.
+ */
 export default function GrupeDodaj() {
   const navigate = useNavigate();
   const { showLoading, hideLoading } = useLoading();
@@ -17,7 +25,13 @@ export default function GrupeDodaj() {
 
   const { prikaziError } = useError();
 
-  async function dohvatiPrograme(){
+  /**
+   * dohvatiPrograme
+   * 
+   * Funkcija koja dohvaća sve dostupne programe iz backend-a
+   * i postavlja ih u stanje `programi`. Također postavlja defaultnu šifru prvog programa.
+   */
+  async function dohvatiPrograme() {
     showLoading();
     const odgovor = await ProgramService.get();
     hideLoading();
@@ -25,28 +39,43 @@ export default function GrupeDodaj() {
     setProgramSifra(odgovor.poruka[0].sifra);
   }
 
-
-
-  useEffect(()=>{
+  useEffect(() => {
     dohvatiPrograme();
-  },[]);
+  }, []);
 
+  /**
+   * dodaj
+   * 
+   * Funkcija koja šalje zahtjev za dodavanje nove grupe.
+   * Ako dođe do greške, prikazuje poruku greške.
+   * Ako je uspješno, preusmjerava na stranicu pregleda grupa.
+   * 
+   * @param {Object} e - Objekt s podacima nove grupe (naziv, programSifra, trener)
+   */
   async function dodaj(e) {
     showLoading();
     const odgovor = await Service.dodaj(e);
     hideLoading();
-    if(odgovor.greska){
+    if (odgovor.greska) {
       prikaziError(odgovor.poruka);
       return;
     }
     navigate(RouteNames.GRUPA_PREGLED);
   }
 
+  /**
+   * obradiSubmit
+   * 
+   * Funkcija koja obrađuje submit forme.
+   * - Sprema podatke iz forme u objekt.
+   * - Poziva funkciju `dodaj` s tim podacima.
+   * 
+   * @param {Event} e - Submit event forme
+   */
   function obradiSubmit(e) {
     e.preventDefault();
 
     const podaci = new FormData(e.target);
-
 
     dodaj({
       naziv: podaci.get('naziv'),
@@ -56,49 +85,47 @@ export default function GrupeDodaj() {
   }
 
   return (
-      <>
+    <>
       Dodavanje nove grupe
       
       <Form onSubmit={obradiSubmit}>
-          <Form.Group controlId="naziv">
-              <Form.Label>Naziv</Form.Label>
-              <Form.Control type="text" name="naziv" required />
-          </Form.Group>
+        <Form.Group controlId="naziv">
+          <Form.Label>Naziv</Form.Label>
+          <Form.Control type="text" name="naziv" required />
+        </Form.Group>
 
-          <Form.Group className='mb-3' controlId='program'>
-            <Form.Label>Program</Form.Label>
-            <Form.Select 
-            onChange={(e)=>{setProgramSifra(e.target.value)}}
-            >
-            {programi && programi.map((s,index)=>(
+        <Form.Group className='mb-3' controlId='program'>
+          <Form.Label>Program</Form.Label>
+          <Form.Select 
+            onChange={(e) => { setProgramSifra(e.target.value) }}
+          >
+            {programi && programi.map((s, index) => (
               <option key={index} value={s.sifra}>
                 {s.naziv}
               </option>
             ))}
-            </Form.Select>
-          </Form.Group>
+          </Form.Select>
+        </Form.Group>
 
-          <Form.Group controlId="trener">
-              <Form.Label>Trener</Form.Label>
-              <Form.Control type="text" name="trener" required />
-          </Form.Group>
+        <Form.Group controlId="trener">
+          <Form.Label>Trener</Form.Label>
+          <Form.Control type="text" name="trener" required />
+        </Form.Group>
 
-
-          <hr />
-          <Row>
-              <Col xs={6} sm={6} md={3} lg={6} xl={6} xxl={6}>
-              <Link to={RouteNames.GRUPA_PREGLED}
-              className="btn btn-danger siroko">
+        <hr />
+        <Row>
+          <Col xs={6} sm={6} md={3} lg={6} xl={6} xxl={6}>
+            <Link to={RouteNames.GRUPA_PREGLED} className="btn btn-danger siroko">
               Odustani
-              </Link>
-              </Col>
-              <Col xs={6} sm={6} md={9} lg={6} xl={6} xxl={6}>
-              <Button variant="primary" type="submit" className="siroko">
-                  Dodaj novu grupu
-              </Button>
-              </Col>
-          </Row>
+            </Link>
+          </Col>
+          <Col xs={6} sm={6} md={9} lg={6} xl={6} xxl={6}>
+            <Button variant="primary" type="submit" className="siroko">
+              Dodaj novu grupu
+            </Button>
+          </Col>
+        </Row>
       </Form>
-  </>
+    </>
   );
 }
